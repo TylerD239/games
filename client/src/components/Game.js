@@ -1,21 +1,21 @@
 import React, {useContext} from "react"
-import {useHistory} from 'react-router-dom'
-import {IoContext} from "../context/IoContext";
-import {AuthContext} from "../context/AuthContext";
+// import {useHistory} from 'react-router-dom'
+// import {IoContext} from "../context/IoContext";
+import {AuthContext} from "../context/AuthContext"
 
-export const Game = ({game}) => {
+export const Game = ({game, socket}) => {
 
-    const {playSocket} = useContext(IoContext)
-    const history = useHistory()
+    // const {playSocket} = useContext(IoContext)
+    // const history = useHistory()
     const {name} = useContext(AuthContext)
 
     const joinGame = () => {
-        playSocket.emit('join game', {id: game.id, name})
-        history.push(`cross/${game.id}`)
+        socket.emit('join game', {id: game._id, name})
+        // history.push(`cross/${game._id}`)
     }
 
     const deleteGame = () => {
-        playSocket.emit('delete game', game.id)
+        socket.emit('delete game', game._id)
     }
 
     return(
@@ -24,7 +24,7 @@ export const Game = ({game}) => {
                 <strong>{game.creator}</strong>
             </div>
             <div className="card-body">
-                <h5 className="card-title">Game #{game.id}</h5>
+                <h5 className="card-title">Game #{game._id}</h5>
                 {name !== game.creator && <button className="btn btn-primary" onClick={joinGame}>Присоединиться</button>}
                 {name === game.creator && <button className="btn btn-primary" onClick={deleteGame}>Отменить</button>}
             </div>

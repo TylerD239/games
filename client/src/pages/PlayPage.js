@@ -5,51 +5,38 @@ import {AuthContext} from "../context/AuthContext"
 import {IoContext} from "../context/IoContext";
 
 
-export const PlayPage = () => {
+export const PlayPage = ({type}) => {
 
-    const {playSocket} = useContext(IoContext)
-
-    const [games, setGames] = useState([])
-
-    // const refGames = useRef(games)
-    // refGames.current = games
-
-    const history = useHistory()
+    // const {playSocket} = useContext(IoContext)
+    const sockets = useContext(IoContext)
+    const socket = type === 'chess' ? sockets.chessSocket : type === 'cross' ? sockets.crossSocket : null
     const {name} = useContext(AuthContext)
+    const [games, setGames] = useState([])
+    const history = useHistory()
 
-    const createGame = () => {
-        if (games.some((game) => game.creator === name)) return false
-        playSocket.emit('send game', name)
-
-    }
-
+    const createGame = () => {if (games.every((game) => game.creator !== name)) socket.emit('send game', name)}
 
     useEffect( () => {
-
-        playSocket.emit('ready', name)
-        playSocket.on('baseGames', (bGames) => {
-            setGames(bGames)
-        })
-        playSocket.on('game connect', (id) => {
-            history.push(`cross/${id}`)
-
-        })
-
-        return () => playSocket.removeAllListeners()
-    },[])
+        console.log(1)
+        socket.emit('ready', name)
+        socket.on('baseGames', (bGames) => {setGames(bGames)})
+        socket.on('game connect', (id) => {history.push(`${type}/${id}`)})
+        return () => socket.removeAllListeners()
+    },[history, name, socket])
 
 
 
     return (
         <div>
+            <h1>{type}</h1>
             <button type="button" onClick={createGame} className="btn btn-primary btn-lg btn-block mt-5" >Создать игру</button>
             <div>
 
                 {games.map((game) => {
                     return(
-                        <Game key={game.id} game = {game} />
-                        )
-                    })
+                        <Game key={game._id} game = {game} socket = {socket}/>
+                    )
+                })
                 }
             </div>
         </div>

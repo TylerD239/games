@@ -8,7 +8,7 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
     return (
 
         <nav className="navbar navbar-expand-sm navbar-light bg-light">
-            <a className="navbar-brand">Navbar</a>
+            <span className="navbar-brand">Navbar</span>
             <button className="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -20,8 +20,18 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
                     {isAuthenticated ?
                     <>
                         <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <NavLink className="nav-link" to="/play">Play</NavLink>
+                            {/*<li className="nav-item">*/}
+                            {/*    <NavLink className="nav-link" to="/play">Play</NavLink>*/}
+                            {/*</li>*/}
+                            <li className="nav-item dropdown">
+                                <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Play
+                                </span>
+                                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <NavLink className="dropdown-item" to="/playChess">chess</NavLink>
+                                    <NavLink className="dropdown-item" to="/playCross">cross</NavLink>
+                                </div>
                             </li>
 
                             <li className="nav-item">

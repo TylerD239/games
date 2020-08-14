@@ -10,7 +10,7 @@ export const CrossPage = () => {
 
     const noughtRadius = 30, crossSize = 30
     const {name} = useContext(AuthContext)
-    const {playSocket} = useContext(IoContext)
+    const {crossSocket} = useContext(IoContext)
     const [gameId, setGameId] = useState(null)
     const [winner, setWinner] = useState(null)
     // const [opponentName, setOpponentName] = useState('')
@@ -66,40 +66,41 @@ export const CrossPage = () => {
     const click = (event) => {
         console.log(event.nativeEvent.offsetY,event.nativeEvent.offsetX)
         const cell = Math.floor(event.nativeEvent.offsetY/ 100)*3 + Math.floor(event.nativeEvent.offsetX/ 100)
-        playSocket.emit('click', {cell, id:gameId, name})
+        crossSocket.emit('click', {cell, gameId, name})
 
     }
 
     const exit = () => {
-        playSocket.emit('exit', {name, gameId})
+        crossSocket.emit('exit', {name, gameId})
     }
 
 
     useEffect( () => {
 
-        playSocket.emit('connected to game', name)
+        crossSocket.emit('connected to game', name)
 
-        playSocket.on('game info', (id) => {
+        crossSocket.on('game info', (id) => {
             setGameId(id)
         })
 
-        playSocket.on('winner', (winner) => {
+        crossSocket.on('winner', (winner) => {
             setWinner(winner)
         })
 
-        playSocket.on('draw', ({cell, type}) => {
+        crossSocket.on('draw', ({cell, type}) => {
+            console.log(cell,type)
             if (type === 'cross') drawCross(cell)
             if (type === 'nought') drawNought(cell)
         })
 
-        playSocket.on('go away', () => {
-            history.push(`/play`)
+        crossSocket.on('go away', () => {
+            history.push(`/playCross`)
         })
 
         drawBoard()
 
-        return () => playSocket.removeAllListeners()
-    },[])
+        return () => crossSocket.removeAllListeners()
+    },[crossSocket, history, name])
 
 
 

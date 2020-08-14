@@ -10,6 +10,11 @@ const getGames = async (messages) => {
     messages.push(...data)
 }
 
+const newGame = async (game) => {
+    await Message.find()
+    messages.push(...data)
+}
+
 
 const clearModel = (model) => {
     model.remove({},()=>{})

@@ -30,7 +30,7 @@ export const ChatPage = () => {
             setMessages((prevMessages) => [...prevMessages, message])
         })
         return () => chatSocket.removeAllListeners()
-    },[])
+    },[chatSocket])
 
 
 

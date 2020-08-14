@@ -8,10 +8,12 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
-const play = io.of('/play')
+const playCross = io.of('/playCross')
+const playChess = io.of('/playChess')
 const chat = io.of('/chat')
 
-require('./socket.io/playCross')(play)
+require('./socket.io/playCross')(playCross)
+require('./socket.io/playChess')(playChess)
 require('./socket.io/chat')(chat)
 
 const PORT = config.get('port') || 5000;

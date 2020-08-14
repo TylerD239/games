@@ -1,18 +1,18 @@
 
 class Game {
-    constructor(name, id, creatorSocketId) {
+    constructor(name, creatorSocketId, type) {
+        this.type = type
         this.creator = name
-        this.id = id + 1
         this.time = Date.now()
         this.creatorSocketId = creatorSocketId
         this.socketsId.push(creatorSocketId)
     }
-    player = null
+    player = ''
     socketsId = []
     full = false
     turn = 0
-    field = new Array(9).fill(0)
-    winner = null
+    field = []
+    winner = ''
 
     connect(name, playerSocketId) {
         this.full = true

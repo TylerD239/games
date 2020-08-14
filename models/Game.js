@@ -1,10 +1,11 @@
 const {Schema, model} = require('mongoose')
 
 const schema = new Schema ({
-	id:{type:Number, required: true, unique: true},
-	player: {type: String, required: true},
+	time: {type: Number, required: true},
+	player: {type: String},
 	creator: {type: String, required: true},
 	field: {type: Array, required: true},
-	winner: {type:String, required: true}
+	type: {type: String, required: true},
+	winner: {type:String}
 })
 module.exports = model('Game_db', schema)
