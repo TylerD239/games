@@ -21,18 +21,14 @@ export const ChessInfo = ({game,name}) => {
 
     }
     useEffect(()=>{
-        // window.onfocus = () => {
-        //     console.log(1)
-        // }
+        // console.log(game)
         setBlackTime(game.black.time)
         setWhiteTime(game.white.time)
-        // console.log(game.winner)
+
         if (!game.winner) {
             const timer = setInterval(() => {
                 if (game.turnColor === 'white') setWhiteTime(game.white.time - Date.now() + game.lastTime)
                 if (game.turnColor === 'black') setBlackTime(game.black.time - Date.now() + game.lastTime)
-                // if (game.turnColor === 'white') setWhiteTime(prev => prev - 100)
-                // if (game.turnColor === 'black') setBlackTime(prev => prev - 100)
 
             }, 1000)
             return () => clearInterval(timer)
@@ -46,8 +42,8 @@ export const ChessInfo = ({game,name}) => {
         game ?
     <div className="chessInfo">
         {game.winner &&
-            <span className="d-block p-2 bg-dark text-white">
-                {game.winner}
+            <span className="d-block p-4 bg-secondary text-white">
+                winner: {game.winner}
             </span>
         }
 
@@ -57,13 +53,28 @@ export const ChessInfo = ({game,name}) => {
         <span className="d-block p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? blackTime : whiteTime)}</span>
         <table className="table table-dark table-hover table-bordered">
             <tbody>
-            {game.white.moves.map((move, i) => (
-                <tr>
-                    <th scope="row">{i}</th>
-                    <td>e2-e4</td>
-                    <td>e7-e5</td>
-                </tr>
-            ))}
+            {game.white.moves.map((move, i,arr) => {
+                const blackMoves = game.black.moves
+                const blackMove = blackMoves[i]
+                    ?
+                    'ABCDEFG'[blackMoves[i].piece.position.x]
+                    + (8 - blackMoves[i].piece.position.y).toString()
+                    + ' - '
+                    + 'ABCDEFG'[blackMoves[i].to.x]
+                    + (8 - blackMoves[i].to.y).toString()
+                    : null
+                const whiteMove = 'ABCDEFG'[move.piece.position.x]
+                    + (8 - move.piece.position.y).toString()
+                    + ' - '
+                    +'ABCDEFG'[move.to.x]
+                    + (8 - move.to.y).toString()
+                return (<tr key = {i}>
+                    <th scope="row">{i + 1}</th>
+                    <td>{whiteMove}</td>
+                    <td>{blackMove}</td>
+                </tr>)
+
+            })}
             </tbody>
         </table>
         <span

@@ -4,7 +4,7 @@ import {InfoPage} from './pages/InfoPage'
 import {PlayPage} from './pages/PlayPage'
 import {AuthPage} from './pages/AuthPage'
 import {ChatPage} from "./pages/ChatPage"
-import {CrossPage} from "./pages/CrossPage"
+// import {CrossPage} from "./pages/CrossPage"
 import {ChessPage} from "./pages/ChessPage"
 // import {PlayChess} from "./pages/PlayChess"
 
@@ -25,9 +25,9 @@ export const useRoutes = isAuthenicated => {
                 <Route path="/chat" exact>
                     <ChatPage />
                 </Route>
-                <Route path = "/cross/:id">
-                    <CrossPage />
-                </Route>
+                {/*<Route path = "/cross/:id">*/}
+                {/*    <CrossPage />*/}
+                {/*</Route>*/}
                 <Route path = "/chess/:id">
                     <ChessPage />
                 </Route>

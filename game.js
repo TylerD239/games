@@ -11,18 +11,14 @@ class Game {
         this.creator = name
         this.time = Date.now()
         this.creatorSocketId = creatorSocketId
-        // this.socketsId.push(creatorSocketId)
     }
-    // player = ''
+
     get id() {
         return this._id.toString()
     }
-    // socketsId = []
+
     full = false
-    // turn = 0
-    // field = []
-    // winner = ''
-    // availableMoves = {}
+    moves = []
     set setWinner (val) {
         this.winner = val
     }
@@ -36,18 +32,14 @@ class Game {
 
     white = {
         eaten: [],
-        // name: '',
         castling : true,
-        // time : 0,
         pieces : [],
         moves: []
     }
 
     black = {
         eaten: [],
-        // name: '',
         castling : true,
-        // time : 0,
         pieces : [],
         moves: []
     }
@@ -81,6 +73,7 @@ class Game {
                 this.field[move.piece.position.y][5] = this.field[move.piece.position.y][7]
                 this.field[move.piece.position.y][5].position.x = 5
                 this.field[move.piece.position.y][7] = 0
+
             }
             else if (move.to.x === 2) {
                 this.field[move.piece.position.y][3] = this.field[move.piece.position.y][0]
@@ -91,31 +84,27 @@ class Game {
         }
 
         if (move.piece.piece === 'king' || move.piece.piece === 'rook' ) this[color].castling = false
-
+        this.moves.push(move)
+        this[color].moves.push(move)
         this.turn++
         this.availableMoves = availableMoves(this.turnColor, this)
-        // if (this.availableMoves === 'checkmate')  this.winner = this[color].name
-        // if (this.availableMoves === 'stalemate')  this.winner = 'draw'
+
     }
-    connect(name, rating, playerSocketId) {
+    connect(name, rating) {
         this.lastTime = Date.now()
         this.full = true
         this.player = name
-        // this.socketsId.push(playerSocketId)
         this.turn = 1
         this[name] = {
             color: 'black',
             rating
         }
-
         this[this.creator].color = 'white'
-
         this.white.name = this.creator
         this.black.name = this.player
         this.field = createField()
         this.field.forEach(el => el.forEach(piece => {if (piece) this[piece.color].pieces.push(piece)}))
         this.availableMoves = availableMoves('white', this)
-
     }
 }
 

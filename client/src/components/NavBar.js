@@ -21,17 +21,19 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
                     <>
                         <ul className="navbar-nav mr-auto">
 
-                            <li className="nav-item dropdown">
-                                <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Play
-                                </span>
-                                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <NavLink className="dropdown-item" to="/playChess">chess</NavLink>
-                                    <NavLink className="dropdown-item" to="/playCross">cross</NavLink>
-                                </div>
+                            {/*<li className="nav-item dropdown">*/}
+                            {/*    <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button"*/}
+                            {/*       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
+                            {/*        Play*/}
+                            {/*    </span>*/}
+                            {/*    <div className="dropdown-menu" aria-labelledby="navbarDropdown">*/}
+                            {/*        <NavLink className="dropdown-item" to="/playChess">chess</NavLink>*/}
+                            {/*        <NavLink className="dropdown-item" to="/playCross">cross</NavLink>*/}
+                            {/*    </div>*/}
+                            {/*</li>*/}
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/playChess">Play</NavLink>
                             </li>
-
                             <li className="nav-item">
                                 <NavLink className="nav-link" to="/chat">Chat</NavLink>
                             </li>

@@ -18,20 +18,15 @@ const chatSocket = io.connect('/chat')
 
 
 function App() {
-
-
-
     const {token, login, logout, userId, name, ready} = useAuth()
     const [page, setPage] = useState('login')
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
 
-    // console.log(isAuthenticated)
-
     if (!ready) {
         return <Loader />
     }
-    console.log(ready)
+
   return (
         <IoContext.Provider value={{chatSocket, chessSocket, crossSocket}}>
           <AuthContext.Provider value = {{token, login, logout, userId, isAuthenticated, name, page, setPage}}>

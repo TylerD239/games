@@ -18,7 +18,8 @@ export const PlayPage = ({type}) => {
     const createGame = () => {if (games.every((game) => game.creator !== name)) socket.emit('send game', name, rating)}
 
     useEffect( () => {
-        socket.emit('ready', name)
+        // console.log('hui',name)
+        if (name) socket.emit('ready', name)
         socket.on('baseGames', bGames => setGames(bGames))
         socket.on('rating', rate => setRating(rate))
         socket.on('game connect', id => history.push(`${type}/${id}`))

@@ -12,12 +12,18 @@ module.exports = (play) => {
     play.on('connection', socket => {
 
         socket.on('ready', name => {
+            // console.log('name',name)
             const game = games.find(game => game[name])
             if (game && game.full) {
                 socket.emit('game connect', game.id)
                 } else {
                 if (game) game.creatorSocketId = socket.id
-                User.findOne({login: name}, (er, user) => socket.emit('rating', user.rating))
+                User.findOne({login: name}, (err, user) => {
+
+                    if (err) console.log(err)
+                    // else console.log('user',user)
+                    else socket.emit('rating', user.rating)
+                })
                 socket.emit('baseGames', games)
             }
 
@@ -44,7 +50,7 @@ module.exports = (play) => {
             if (selfGame) games.splice(games.indexOf(selfGame), 1)
             const game = games.find(game => game.id === id)
             if (!game) return false
-            game.connect(name, rating, socket.id)
+            game.connect(name, rating)
             socket.emit('game connect', id)
             play.to(game.creatorSocketId).emit('game connect', id)
 

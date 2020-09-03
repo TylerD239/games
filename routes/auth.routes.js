@@ -60,7 +60,7 @@ router.post(
             }
 
             const token = jwt.sign(
-                {userId: user.id},
+                {userId: user.id, name: login},
                 config.get('jwtSecret'),
                 {expiresIn: '20 days'}
             )
