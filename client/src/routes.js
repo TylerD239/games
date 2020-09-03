@@ -31,7 +31,7 @@ export const useRoutes = isAuthenicated => {
                 <Route path = "/chess/:id">
                     <ChessPage />
                 </Route>
-                <Redirect to="/chat" />
+                <Redirect to="/playChess" />
             </Switch>
         )
     }

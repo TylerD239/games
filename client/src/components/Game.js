@@ -3,14 +3,16 @@ import React, {useContext} from "react"
 // import {IoContext} from "../context/IoContext";
 import {AuthContext} from "../context/AuthContext"
 
-export const Game = ({game, socket}) => {
+export const Game = ({game, socket, rating}) => {
+
+    // console.log(game, typeof game._id)
 
     // const {playSocket} = useContext(IoContext)
     // const history = useHistory()
     const {name} = useContext(AuthContext)
 
     const joinGame = () => {
-        socket.emit('join game', {id: game._id, name})
+        socket.emit('join game', game._id, name, rating)
         // history.push(`cross/${game._id}`)
     }
 
@@ -21,7 +23,7 @@ export const Game = ({game, socket}) => {
     return(
         <div className="card text-center mt-3">
             <div className="card-header">
-                <strong>{game.creator}</strong>
+                <strong>{game.creator}({game[game.creator].rating})</strong>
             </div>
             <div className="card-body">
                 <h5 className="card-title">Game #{game._id}</h5>

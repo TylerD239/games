@@ -31,13 +31,13 @@ function App() {
     if (!ready) {
         return <Loader />
     }
-
+    console.log(ready)
   return (
         <IoContext.Provider value={{chatSocket, chessSocket, crossSocket}}>
           <AuthContext.Provider value = {{token, login, logout, userId, isAuthenticated, name, page, setPage}}>
               <Router>
                   <NavBar />
-                  <div className = "container">
+                  <div className = "container-fluid">
                       {routes}
                   </div>
               </Router>

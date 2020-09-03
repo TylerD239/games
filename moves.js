@@ -1,263 +1,74 @@
-const availableMoves = (player,field) => {
+const pieceMoves = require('./pieceMoves')
 
+const availableMoves = (color,game) => {
+    const field = game.field
+    const color2 = game.getOpponent(color)
+    const allMoves = {}
 
-    const pieceMoves = (cell, field) => {
-        const check = (i, k) => {
-            if (y + i >= 0 && x + k >= 0 && y + i < 8 && x + k < 8) {
-                if (!field[y + i][x + k]) {
-                    moves.push({y: y + i, x: x + k, ate: false})
-                } else if (field[y + i][x + k].player !== player) {
-                    moves.push({y: y + i, x: x + k, ate: field[y + i][x + k].piece})
-                }
-            }
-        }
-        const y = cell.y
-        const x = cell.x
-        const player = field[y][x].player
-        const moves = []
-        switch (field[y][x].piece) {
-            case 'rook':
-                for (let i = 1; y + i < 8; i++) {
-                    if (!field[y + i][x]) {
-                        moves.push({y: y + i, x, ate: false})
-                    } else if (field[y + i][x].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x, ate: field[y + i][x].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0; i++) {
-                    if (!field[y - i][x]) {
-                        moves.push({y: y - i, x, ate: false})
-                    } else if (field[y - i][x].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x, ate: field[y - i][x].piece})
-                        break
-                    }
-                }
-                for (let i = 1; x + i < 8; i++) {
-                    if (!field[y][x + i]) {
-                        moves.push({y: y, x: x + i, ate: false})
-                    } else if (field[y][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y, x: x + i, ate: field[y][x + i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; x - i >= 0; i++) {
-                    if (!field[y][x - i]) {
-                        moves.push({y: y, x: x - i, ate: false})
-                    } else if (field[y][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y, x: x - i, ate: field[y][x - i].piece})
-                        break
-                    }
-                }
-                break
-            case 'knight':
-
-                check(-1, -2)
-                check(-1, 2)
-                check(1, -2)
-                check(1, 2)
-                check(-2, -1)
-                check(-2, 1)
-                check(2, -1)
-                check(2, 1)
-                break
-            case 'bishop':
-                for (let i = 1; y + i < 8 && x + i < 8; i++) {
-                    if (!field[y + i][x + i]) {
-                        moves.push({y: y + i, x: x + i, ate: false})
-                    } else if (field[y + i][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x: x + i, ate: field[y + i][x + i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-                    if (!field[y - i][x - i]) {
-                        moves.push({y: y - i, x: x -i, ate: false})
-                    } else if (field[y - i][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x: x -i, ate: field[y - i][x - i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y + i < 8 && x - i >= 0; i++) {
-                    if (!field[y + i][x - i]) {
-                        moves.push({y: y + i, x: x - i, ate: false})
-                    } else if (field[y + i][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x: x - i, ate: field[y + i][x - i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0 && x + i < 8; i++) {
-                    if (!field[y - i][x + i]) {
-                        moves.push({y: y - i, x: x + i, ate: false})
-                    } else if (field[y - i][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x: x + i, ate: field[y - i][x + i].piece})
-                        break
-                    }
-                }
-                break
-            case 'queen':
-                for (let i = 1; y + i < 8 && x + i < 8; i++) {
-                    if (!field[y + i][x + i]) {
-                        moves.push({y: y + i, x: x + i, ate: false})
-                    } else if (field[y + i][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x: x + i, ate: field[y + i][x + i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-                    if (!field[y - i][x - i]) {
-                        moves.push({y: y - i, x: x -i, ate: false})
-                    } else if (field[y - i][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x: x -i, ate: field[y - i][x - i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y + i < 8 && x - i >=  0; i++) {
-                    if (!field[y + i][x - i]) {
-                        moves.push({y: y + i, x: x - i, ate: false})
-                    } else if (field[y + i][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x: x - i, ate: field[y + i][x - i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0 && x + i < 8; i++) {
-                    if (!field[y - i][x + i]) {
-                        moves.push({y: y - i, x: x + i, ate: false})
-                    } else if (field[y - i][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x: x + i, ate: field[y - i][x + i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y + i < 8; i++) {
-                    if (!field[y + i][x]) {
-                        moves.push({y: y + i, x, ate: false})
-                    } else if (field[y + i][x].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y + i, x, ate: field[y + i][x].piece})
-                        break
-                    }
-                }
-                for (let i = 1; y - i >= 0; i++) {
-                    if (!field[y - i][x]) {
-                        moves.push({y: y - i, x, ate: false})
-                    } else if (field[y - i][x].player === player) {
-                        break
-                    } else {
-                        moves.push({y: y - i, x, ate: field[y - i][x].piece})
-                        break
-                    }
-                }
-                for (let i = 1; x + i < 8; i++) {
-                    if (!field[y][x + i]) {
-                        moves.push({y: y, x: x + i, ate: false})
-                    } else if (field[y][x + i].player === player) {
-                        break
-                    } else {
-                        moves.push({y, x: x + i, ate: field[y][x + i].piece})
-                        break
-                    }
-                }
-                for (let i = 1; x - i >= 0; i++) {
-                    if (!field[y][x - i]) {
-                        moves.push({y: y, x: x - i, ate: false})
-                    } else if (field[y][x - i].player === player) {
-                        break
-                    } else {
-                        moves.push({y, x: x - i, ate: field[y][x - i].piece})
-                        break
-                    }
-                }
-                break
-            case 'king':
-
-                check(-1, -1)
-                check(-1, 1)
-                check(-1, 0)
-                check(0, -1)
-                check(0, 1)
-                check(1, 1)
-                check(1, -1)
-                check(1, 0)
-                break
-            case 'pawn':
-                if (player === 'black') {
-                    if (y + 1 < 8 && !field[y + 1][x]) moves.push({y: y + 1, x, ate: false})
-                    if (y + 2 < 8 && y === 1 && !field[y + 1][x] && !field[y + 2][x]) moves.push({y: y + 2, x, ate: false})
-                    if (y + 1 < 8 && x + 1 < 8 && field[y + 1][x + 1] && field[y + 1][x + 1].player !== player) moves.push({y: y + 1, x: x + 1, ate: field[y + 1][x + 1].piece})
-                    if (y + 1 < 8 && x - 1 >= 0 && field[y + 1][x - 1] && field[y + 1][x - 1].player !== player) moves.push({y: y + 1, x: x - 1, ate: field[y + 1][x - 1].piece})
-                }
-                if (player === 'white') {
-                    if (y - 1 >= 0 && !field[y - 1][x]) moves.push({y: y - 1, x, ate: false})
-                    if (y - 2 >= 0 && y === 6 && !field[y - 1][x] && !field[y - 2][x]) moves.push({y: y - 2, x, ate: false})
-                    if (y - 1 >= 0 && x + 1 < 8 && field[y - 1][x + 1] && field[y - 1][x + 1].player !== player) moves.push({y: y - 1, x: x + 1, ate: field[y - 1][x + 1].piece})
-                    if (y - 1 >= 0 && x - 1 >= 0 && field[y - 1][x - 1] && field[y - 1][x - 1].player !== player) moves.push({y: y - 1, x: x - 1, ate: field[y - 1][x - 1].piece})
-                }
-                break
-        }
-        return moves
+    if (game[color2].pieces
+        .some(el => pieceMoves({x: el.position.x, y: el.position.y}, field, color2)
+            .some(move => move.ate.piece === 'king'))) {
+        game[color].check = true
     }
 
-    const allMoves = {}
-    const f = [...field].flat()
-    f.forEach( el => {
-        if (el.player === player) {
-            const moves = pieceMoves({x: el.position.x, y:el.position.y}, field)
-            const moves2 = moves.filter(move => {
-                let notCheck = true
-                const field1  =  JSON.parse(JSON.stringify(field))
-                // const field1  = [...field]
-                field1[move.y][move.x] = field1[el.position.y][el.position.x]
-                field1[move.y][move.x].position = {x:move.x, y:move.y}
-                field1[el.position.y][el.position.x] = 0
-                const f1 = [...field1].flat()
-                f1.forEach( el => {
-                    if (el && el.player !== player) {
-                        const moves = pieceMoves({x: el.position.x, y:el.position.y}, field1)
-                        if (moves.some(move =>  move.ate === 'king')) {
-                            // console.log(move)
-                            return notCheck = false}
-                    }
-                })
-                // console.log(notCheck, move)
-                return notCheck
-            })
+    // console.log('==========================================')
+    game[color].pieces.forEach( el => {
+
+            const moves = pieceMoves({x: el.position.x, y:el.position.y}, field, color)
+
             // console.log(moves)
-            allMoves[el.id] = moves2
-        }
-        // console.log(el)
+            const moves2 = moves.filter(move => {
+
+                const field1 = JSON.parse(JSON.stringify(field))
+
+                field1[move.y][move.x] = field1[el.position.y][el.position.x]
+                field1[move.y][move.x].position = {x: move.x, y: move.y}
+                field1[el.position.y][el.position.x] = 0
+
+                return !game[color2].pieces
+                    .filter(piece => piece !== move.ate)
+                    .some(el => pieceMoves({x: el.position.x, y: el.position.y}, field1, color2)
+                        .some(move => move.ate.piece === 'king'))
+                })
+
+            if (el.piece === 'king' && game[color].castling && !game[color].check) {
+                let shortCastling = true
+                let longCastling = true
+                const line = color === 'white' ? 7 : 0
+
+                if (field[line][5] || field[line][6]) shortCastling = false
+                if (field[line][2] || field[line][3]) longCastling = false
+
+                if (shortCastling || longCastling) {
+                    game[color2].pieces.forEach(el => {
+
+                        const moves = pieceMoves({x: el.position.x, y: el.position.y}, field, color2)
+
+                        moves.forEach(move => {
+
+                            if (move.y === line && move.x === 5) shortCastling = false
+                            if (move.y === line && move.x === 6) shortCastling = false
+                            if (move.y === line && move.x === 2) longCastling = false
+                            if (move.y === line && move.x === 3) longCastling = false
+                        })
+
+
+                    })
+                }
+                if (shortCastling) moves2.push({y:line, x: 6, ate: false, castling: true})
+                if (longCastling) moves2.push({y:line, x: 2, ate: false, castling: true})
+            }
+
+            if (moves2.length) allMoves[el.id] = moves2
     })
 
+    if (Object.keys(allMoves).length === 0) {
+        if (game[color].check) game.setWinner = game.getOpponent(game[color].name)
+        else game.setWinner ='draw'
+    } else return allMoves
 
 
-
-    // console.log(allMoves)
-    return allMoves
 }
 
-// console.log(availableMoves('white'))
+
 module.exports = availableMoves

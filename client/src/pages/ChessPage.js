@@ -1,33 +1,35 @@
 import React, {useContext, useEffect, useRef, useState} from "react"
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {IoContext} from "../context/IoContext";
 import {AuthContext} from "../context/AuthContext";
 import {drawBoard, drawMoves} from "../chess/board";
+// import {Time} from "../components/Time";
+import {ChessInfo} from "../components/ChessInfo";
+import {Loader} from "../components/Loader";
 
 
 
 export const ChessPage = () => {
 
+    const {id} = useParams()
     const history = useHistory()
+    const canvas = useRef(null)
     const ref = useRef({
-        ctx: null,
-        gameId: '',
-        field: [],
+        moved: false,
+        gameId: id,
         raised: false,
         from: {},
-        winner: '',
-        availableMoves: {},
-        color: '',
-        turn:'',
         raisedPiece: {},
         pieceMoves: []
     })
+
+    const [game, setGame] = useState(null)
+    // const [winner, setWinner] = useState(null)
     const {name} = useContext(AuthContext)
     const {chessSocket} = useContext(IoContext)
 
     function cellDetect(coord) {
-        // console.log(coord)
-        return ref.current.color === 'white' ?
+        return game[name].color === 'white' ?
             {y : Math.floor(coord.offsetY / 100), x: Math.floor(coord.offsetX / 100)}
             :
             {y : 7 - Math.floor(coord.offsetY / 100), x:  7 - Math.floor(coord.offsetX / 100)}
@@ -35,103 +37,83 @@ export const ChessPage = () => {
 
 
 
-
-
     const click = (evt) => {
 
-        // const i = new Image()
-        // i.src = black
-        // ref.current.ctx.drawImage(i, 2 * 100, 2 * 100, 100,100);
-        if (ref.current.color !== ref.current.turn) return false
-        // const ctx = ref.current.ctx
+        if (game.winner || game[name].color !== game.turnColor || ref.current.moved) return false
+
         const cell = cellDetect(evt.nativeEvent)
 
         if (!ref.current.raised) {
 
-            const piece = ref.current.field[cell.y][cell.x]
+            const piece = game.field[cell.y][cell.x]
 
-            if (!piece) return false
-            if (piece.player !== ref.current.turn) return false
+            if (piece && piece.color === game[name].color) {
 
-            ref.current.raisedPiece = piece
-            const moves = ref.current.availableMoves[piece.id] || []
-            ref.current.pieceMoves = moves
-
-            drawMoves(ref.current.field, ref.current.color, cell, moves, ref.current.ctx)
-
-
-
-        }
-        if (ref.current.raised) {
-            // const to = cell
-            if (ref.current.pieceMoves.find(move => move.y === cell.y && move.x === cell.x)) {
-                chessSocket.emit('move', {from: ref.current.raisedPiece.position, to: cell}, ref.current.gameId, name)
-            } else {
-                drawBoard(ref.current.field, ref.current.color, ref.current.ctx)
+                ref.current.raisedPiece = piece
+                const moves = game.availableMoves[piece.id] || []
+                ref.current.pieceMoves = moves
+                drawMoves(game.field, game[name].color, cell, moves, canvas.current)
             }
+        }
 
+        if (ref.current.raised) {
+            const move = ref.current.pieceMoves.find(move => move.y === cell.y && move.x === cell.x)
+            if (move) {
+                ref.current.moved = true
+                ref.current.pieceMoves = []
+                chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move}, id, name)
+            } else {
+                drawBoard(game.field, game[name].color, canvas.current)
+            }
+            ref.current.raisedPiece = {}
         }
         ref.current.raised = !ref.current.raised
     }
 
-    const exit = () => {
-        chessSocket.emit('exit', {name, gameId: ref.current.gameId})
-    }
+
 
 
     useEffect( () => {
 
-        ref.current.ctx = document.getElementById('canvasChess').getContext('2d')
-        chessSocket.emit('connected to game', name)
+        chessSocket.emit('connected to game', id, name)
 
-        chessSocket.on('game info', (id, color) => {
-            ref.current.gameId = id
-            ref.current.color = color
-            // ref.current.field = field
-            // console.log(field)
-            // drawBoard(field, ref.current.ctx())
+        chessSocket.on('endGame', game => {
+            setGame(game)
+            drawBoard(game.field, game[name].color, canvas.current)
+            // setWinner(game.winner)
+            // alert(game.winner)
         })
 
-        chessSocket.on('winner', (winner) => {
-            // setWinner(winner)
+        chessSocket.on('game', game => {
+            // if (!game) history.push('/playChess')
+            ref.current.moved = false
+            setGame(game)
+            drawBoard(game.field, game[name].color, canvas.current)
         })
-
-        chessSocket.on('field', (field, turn, moves, time) => {
-            console.log(time)
-            ref.current.availableMoves = moves
-
-            ref.current.turn = turn % 2 === 1 ? 'white' : 'black'
-            // console.log(turn, ref.current.turn)
-            ref.current.field = field
-            drawBoard(field, ref.current.color, ref.current.ctx)
-        })
-
-
+        //
         chessSocket.on('go away', () => {
-            history.push(`/play`)
+            history.push(`/playChess`)
         })
-
-        // drawBoard()
 
         return () => chessSocket.removeAllListeners()
-    },[chessSocket, history, name])
+    },[chessSocket, history, name, id])
 
 
-
+    if (!game) return <Loader/>
 
     return (
-
     <div className="row mt-5">
 
-        <div className="col-1">
+        <div className="col-3">
         </div>
-        <div className="col-10">
+        <div className="col-6 justify-content-md-center">
             <div id="cont">
-                <canvas id="canvasChess" onClick={click} width="800" height="800"/>
+                <canvas id="canvasChess" ref={canvas} onClick={click} width="800" height="800"/>
             </div>
         </div>
-        <div className="col-1">
-            <button className="btn btn-outline-danger" onClick={exit} >Сдаться и выйти</button>
+        <div className="col-3 align-self-center">
+            <ChessInfo game={game} name={name}/>
+
         </div>
 
     </div>

@@ -1,32 +1,30 @@
 const Game = require('../game')
 const Game_db = require('../models/Game')
+const User = require('../models/User')
+const {saveGame} = require("../models/mongoFunctions");
 
-const availableMoves = require('../moves')
+// const availableMoves = require('../moves')
 const games = []
 
 module.exports = (play) => {
 
-    play.on('connection', function (socket) {
 
-        socket.on('ready', function (name) {
-            const game = games.find((game) => (game.creator === name || game.player === name))
+    play.on('connection', socket => {
 
+        socket.on('ready', name => {
+            const game = games.find(game => game[name])
             if (game && game.full) {
-
-                game.socketsId.push(socket.id)
-
-                socket.join(game._id.toString())
-
-                socket.emit('game connect', game._id)
-
-            } else {
+                socket.emit('game connect', game.id)
+                } else {
+                if (game) game.creatorSocketId = socket.id
+                User.findOne({login: name}, (er, user) => socket.emit('rating', user.rating))
                 socket.emit('baseGames', games)
             }
 
         })
 
-        socket.on('send game', function (name) {
-            const game = new Game(name, socket.id, 'chess')
+        socket.on('send game', (name, rating) => {
+            const game = new Game(name, rating, socket.id, 'chess', 100000)
             const gameDb = new Game_db(game)
             game._id = gameDb._id
             gameDb.save()
@@ -34,93 +32,70 @@ module.exports = (play) => {
             play.emit('baseGames', games)
         })
 
-        socket.on('delete game', function (id) {
-            games.splice(games.findIndex(game => game._id == id), 1)
+        socket.on('delete game', id => {
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            games.splice(games.indexOf(game), 1)
             play.emit('baseGames', games)
         })
 
-        socket.on('join game', function ({id, name}) {
-            const game = games.find((game) => (game._id == id))
-            game.connect(name, socket.id)
-
-            socket.emit('game connect', game._id)
-            play.to(game.creatorSocketId).emit('game connect', game._id)
+        socket.on('join game', (id, name, rating) => {
+            const selfGame = games.find(game => game.creator === name)
+            if (selfGame) games.splice(games.indexOf(selfGame), 1)
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            game.connect(name, rating, socket.id)
+            socket.emit('game connect', id)
+            play.to(game.creatorSocketId).emit('game connect', id)
 
         })
 
-
-
-
-        socket.on('connected to game', (name) => {
-            const game = games.find((game) => (game.creator === name || game.player === name))
-
-            if (game.field.length === 0) {
-
-
-                game.whiteTime = 180000
-                game.blackTime = 180000
-                game.timer = setInterval(()=> {
-
-                    game.turn % 2 === 1 ? game.whiteTime -= 1000 : game.blackTime -= 1000
-                }, 1000)
-                // game.lastTime = Date.now()
-
-                const field = new Array(8)
-                for (let i = 8;i--;) field[i] = new Array(8).fill(0)
-
-                let id = 0
-
-                const Piece = function (player, piece, position) {
-                    this.player = player
-                    this.piece = piece
-                    this.position = position
-                    this.id = id++
-                    // this.image = new Image()
-                    // this.image.src = `pieces/${player}_${piece}.png`
-                }
-                const pieces = ['rook','knight','bishop','queen','king','bishop','knight','rook','pawn']
-
-                for (let i = 0; i < 8; i++){
-                    field[0][i] = new Piece('black', pieces[i], {x: i, y: 0})
-                    field[1][i] = new Piece('black', pieces[8], {x: i, y: 1})
-                    field[7][i] = new Piece('white', pieces[i], {x: i, y: 7})
-                    field[6][i] = new Piece('white', pieces[8], {x: i, y: 6})
-                }
-                game.field = field
+        socket.on('connected to game', (id, name) => {
+            const game = games.find(game => game.id === id)
+            if (!game) socket.emit('go away')
+            else {
+                socket.join(id)
+                socket.emit('game', {...game, turnColor: game.turnColor, loseTime: null})
             }
 
-            const color = name === game.creator ? 'white' : 'black'
-
-            const room = game._id.toString()
-            socket.join(room)
-            socket.emit('game info', game._id, color)
-            const moves = availableMoves(color, game.field)
-            // console.log(moves)
-            socket.emit('field', game.field, game.turn, moves, {wt: game.whiteTime, bt: game.blackTime})
-            // play.to(room).emit('game info', game._id)
-            // play.to(room).emit('field', game.field, 'white')
-
         })
 
-        socket.on('exit', ({name, gameId}) => {
-            games.splice(games.findIndex(game => game._id == gameId), 1)
-            play.to(gameId.toString()).emit('go away')
+        socket.on('giveUp', (name, id) => {
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            // console.log(id, game)
+            clearTimeout(game.loseTime)
+            game.setWinner = game.getOpponent(name)
+            games.splice(games.indexOf(game), 1)
+            game.loseTime = null
+
+            // setTimeout(()=>{play.to(id).emit('endGame', game)}, 1500)
+            play.to(id).emit('endGame', game)
+            saveGame(game)
         })
 
-        socket.on('move', (move, gameId, name) => {
-            const game = games.find(game => game._id == gameId)
-            // const room = gameId.toString()
-            // const time = Math.floor((Date.now() - game.lastTime) / 1000)
-
-            // game.turn % 2 === 1 ?
-
-
-            game.field[move.to.y][move.to.x] = game.field[move.from.y][move.from.x]
-            game.field[move.to.y][move.to.x].position = {x:move.to.x, y:move.to.y}
-            game.field[move.from.y][move.from.x] = 0
-
-
-            play.to(gameId.toString()).emit('field', game.field, ++game.turn, availableMoves(game.turn % 2 === 1 ? 'white' : 'black', game.field), {wt: game.whiteTime, bt: game.blackTime})
+        socket.on('move', (move, id, name) => {
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            clearTimeout(game.loseTime)
+            game.move(move)
+            if (game.winner) {
+                games.splice(games.indexOf(game), 1)
+                game.loseTime = null
+                play.to(id).emit('endGame', game)
+                saveGame(game)
+            } else {
+                game.loseTime = setTimeout(() => {
+                    game.setWinner = name
+                    game[game.turnColor].time = 0
+                    game.loseTime = null
+                    play.to(id).emit('endGame', game)
+                    games.splice(games.indexOf(game), 1)
+                    saveGame(game)
+                }, game[game.turnColor].time)
+                // setTimeout(()=>{play.to(id).emit('game', {...game, turnColor: game.turnColor, loseTime: null})}, 1500)
+                play.to(id).emit('game', {...game, turnColor: game.turnColor, loseTime: null})
+            }
 
         })
     })

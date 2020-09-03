@@ -1,7 +1,10 @@
 const express = require('express')
 const config = require('config')
 const mongoose = require('mongoose')
+const jwt = require("jsonwebtoken");
+const {clearModel} = require('./models/mongoFunctions')
 // const User = require('./models/User')
+const Game = require('./models/Game')
 
 const app = express()
 
@@ -22,7 +25,16 @@ app.use(express.json({extended:true}))
 
 
 app.use('/api/auth', require('./routes/auth.routes'))
+app.use('/api/checkToken', async (req, res) => {
+    try {
+        const verify = jwt.verify(req.body.token, config.get('jwtSecret'))
+        res.json({verify})
+    } catch (e) {
+        res.json({verify: false})
+    }
+})
 
+// clearModel(Game)
 
 async function start() {
     try {
