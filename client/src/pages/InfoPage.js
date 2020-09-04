@@ -4,7 +4,7 @@ import {useHttp} from "../hooks/http.hook"
 import {Loader} from "../components/Loader";
 
 export const InfoPage = () => {
-    const {token, logout} = useContext(AuthContext)
+    const {token, logout, name} = useContext(AuthContext)
     const {request, loading} = useHttp()
     const [games, setGames] = useState([])
     const getGames = useCallback(async () => {
@@ -24,13 +24,20 @@ export const InfoPage = () => {
     return (
         <div className="container">
             <table className="table table-dark table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Противник</th>
+                    <th scope="col">Результат</th>
+
+                </tr>
+                </thead>
                 <tbody>
                 {games.map((game, i) => (
                         <tr key = {game._id}>
                             <th scope="row">{i + 1}</th>
-                            <td>{game.creator}</td>
-                            <td>{game.player}</td>
-                            <td>{game.winner}</td>
+                            <td>{game.creator === name ? game.player : game.creator}</td>
+                            <td className={game.winner === name ? 'text-success' : game.winner === 'draw' ? 'text-info' : 'text-danger'}>{game.winner === name ? 'победа' : game.winner === 'draw' ? 'ничья' : 'поражение'}</td>
                         </tr>
                     )
                 )}

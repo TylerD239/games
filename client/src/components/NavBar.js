@@ -43,7 +43,7 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
                             </li>
 
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/info">Info</NavLink>
+                                <NavLink className="nav-link" to="/info">Profile</NavLink>
                             </li>
 
                         </ul>
