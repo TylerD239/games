@@ -11,14 +11,28 @@ class Game {
         this.creator = name
         this.time = Date.now()
         this.creatorSocketId = creatorSocketId
+        this.full = false
+        this.moves = []
+        this.white = {
+            eaten: [],
+            castling : true,
+            pieces : [],
+            moves: []
+        }
+
+        this.black = {
+            eaten: [],
+            castling : true,
+            pieces : [],
+            moves: []
+        }
     }
 
     get id() {
         return this._id.toString()
     }
 
-    full = false
-    moves = []
+
     set setWinner (val) {
         this.winner = val
     }
@@ -30,19 +44,7 @@ class Game {
         if (value === this.player) return this.creator
     }
 
-    white = {
-        eaten: [],
-        castling : true,
-        pieces : [],
-        moves: []
-    }
 
-    black = {
-        eaten: [],
-        castling : true,
-        pieces : [],
-        moves: []
-    }
 
     get turnColor() {
         return this.turn % 2 === 0 ? 'black' : 'white'
