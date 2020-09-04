@@ -5,8 +5,6 @@ class Game {
     constructor(name, rating, creatorSocketId, type, time) {
         this[name] = {rating}
         this.timeFormat = time
-        this.white.time = time
-        this.black.time = time
         this.type = type
         this.creator = name
         this.time = Date.now()
@@ -14,6 +12,7 @@ class Game {
         this.full = false
         this.moves = []
         this.white = {
+            time,
             eaten: [],
             castling : true,
             pieces : [],
@@ -21,6 +20,7 @@ class Game {
         }
 
         this.black = {
+            time,
             eaten: [],
             castling : true,
             pieces : [],
