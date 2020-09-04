@@ -24,8 +24,7 @@ const createField = () => {
 
     return field
 }
-<<<<<<< Updated upstream
+
+
 module.exports = createField
-=======
-module.exports = createField
->>>>>>> Stashed changes
+
