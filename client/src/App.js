@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap-icons'
 import 'jquery/dist/jquery'
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 import {BrowserRouter as Router} from 'react-router-dom'
