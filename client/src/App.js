@@ -12,7 +12,7 @@ import {Loader} from "./components/Loader";
 import {IoContext} from "./context/IoContext";
 
 const io = require('socket.io-client')
-const crossSocket = io.connect('/playCross')
+// const crossSocket = io.connect('/playCross')
 const chessSocket = io.connect('/playChess')
 const chatSocket = io.connect('/chat')
 
@@ -29,7 +29,7 @@ function App() {
     }
 
   return (
-        <IoContext.Provider value={{chatSocket, chessSocket, crossSocket}}>
+        <IoContext.Provider value={{chatSocket, chessSocket}}>
           <AuthContext.Provider value = {{token, login, logout, userId, isAuthenticated, name, page, setPage}}>
               <Router>
                   <NavBar />

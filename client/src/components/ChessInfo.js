@@ -47,44 +47,46 @@ export const ChessInfo = ({game,name}) => {
             </span>
         }
 
-        <span className="d-block p-2 bg-dark text-white">
+        <span className="d-block bg-dark text-center lead text-white">
             {game.creator === name ? game.player : game.creator}({game[game.creator === name ? game.player : game.creator].rating})
         </span>
-        <span className="d-block h2 p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? blackTime : whiteTime)}</span>
-        <table className="table table-dark table-hover table-bordered">
-            <tbody>
-            {game.white.moves.map((move, i,arr) => {
-                const blackMoves = game.black.moves
-                const blackMove = blackMoves[i]
-                    ?
-                    'ABCDEFGH'[blackMoves[i].piece.position.x]
-                    + (8 - blackMoves[i].piece.position.y).toString()
-                    + ' - '
-                    + 'ABCDEFGH'[blackMoves[i].to.x]
-                    + (8 - blackMoves[i].to.y).toString()
-                    : null
-                const whiteMove = 'ABCDEFGH'[move.piece.position.x]
-                    + (8 - move.piece.position.y).toString()
-                    + ' - '
-                    +'ABCDEFGH'[move.to.x]
-                    + (8 - move.to.y).toString()
-                return (<tr key = {i}>
-                    <th scope="row">{i + 1}</th>
-                    <td>{whiteMove}</td>
-                    <td>{blackMove}</td>
-                </tr>)
+        <span className="d-block display-4 p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? blackTime : whiteTime)}</span>
+        <div className="table-container" style={{height: '100px'}}>
+            <table className="table table-sm">
+                <tbody>
+                {game.white.moves.map((move, i,arr) => {
+                    const blackMoves = game.black.moves
+                    const blackMove = blackMoves[i]
+                        ?
+                        'ABCDEFGH'[blackMoves[i].piece.position.x]
+                        + (8 - blackMoves[i].piece.position.y).toString()
+                        + ' - '
+                        + 'ABCDEFGH'[blackMoves[i].to.x]
+                        + (8 - blackMoves[i].to.y).toString()
+                        : null
+                    const whiteMove = 'ABCDEFGH'[move.piece.position.x]
+                        + (8 - move.piece.position.y).toString()
+                        + ' - '
+                        +'ABCDEFGH'[move.to.x]
+                        + (8 - move.to.y).toString()
+                    return (<tr key = {i}>
+                        <th scope="row">{i + 1}</th>
+                        <td>{whiteMove}</td>
+                        <td>{blackMove}</td>
+                    </tr>)
 
-            })}
-            </tbody>
-        </table>
+                })}
+                </tbody>
+            </table>
+        </div>
         <span
-            className="d-block h2 p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? whiteTime : blackTime)}</span>
-        <span className="d-block p-2 bg-dark text-white">{name}({game[name].rating})</span>
+            className="d-block display-4 p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? whiteTime : blackTime)}</span>
+        <span className="d-block bg-dark lead text-center text-white">{name}({game[name].rating})</span>
         {game.winner
             ?
-            <button id='exit' onClick={exit} className="d-block p-2 bg-dark text-white">выйти</button>
+            <button id='exit' onClick={exit} className="btn btn-outline-secondary rounded-0">выйти</button>
             :
-            <button id='giveUp' onClick={giveUp} className="d-block p-2 bg-dark text-white">сдаться</button>
+            <button id='giveUp' type="button" onClick={giveUp} className="btn btn-outline-secondary rounded-0">сдаться</button>
         }
 
     </div>

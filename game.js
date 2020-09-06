@@ -2,9 +2,11 @@ const createField = require('./createChessField')
 const availableMoves = require('./moves')
 
 class Game {
-    constructor(name, rating, creatorSocketId, type, time) {
+    constructor(name, rating, creatorSocketId, type, settings) {
+        this.colorFormat = settings.color
         this[name] = {rating}
-        this.timeFormat = time
+        this.timeFormat = settings.min * 60000
+        this.addTime = settings.sec
         this.type = type
         this.creator = name
         this.time = Date.now()
@@ -12,15 +14,14 @@ class Game {
         this.full = false
         this.moves = []
         this.white = {
-            time,
+            time: this.timeFormat,
             eaten: [],
             castling : true,
             pieces : [],
             moves: []
         }
-
         this.black = {
-            time,
+            time: this.timeFormat,
             eaten: [],
             castling : true,
             pieces : [],
@@ -89,21 +90,47 @@ class Game {
         this.moves.push(move)
         this[color].moves.push(move)
         this.turn++
+        this[color].time += this.addTime * 1000
         this.availableMoves = availableMoves(this.turnColor, this)
 
     }
     connect(name, rating) {
+        if (this.colorFormat === 'random') {
+            if ( Math.random() > 0.5) {
+                this[this.creator].color = 'white'
+                this[name] = {
+                    color: 'black',
+                    rating
+                }
+                this.white.name = this.creator
+                this.black.name = this.player
+
+            } else {
+                this[this.creator].color = 'black'
+                this[name] = {
+                    color: 'white',
+                    rating
+                }
+                this.white.name = this.player
+                this.black.name = this.creator
+            }
+        } else {
+            this[this.creator].color = this.colorFormat
+            this[name] = {
+                color: this.getOpponent(this.colorFormat),
+                rating
+            }
+            this[this.colorFormat].name = this.creator
+            this[this.getOpponent(this.colorFormat)].name = this.player
+        }
         this.lastTime = Date.now()
         this.full = true
         this.player = name
         this.turn = 1
-        this[name] = {
-            color: 'black',
-            rating
-        }
-        this[this.creator].color = 'white'
-        this.white.name = this.creator
-        this.black.name = this.player
+
+
+        this.time = Date.now()
+
         this.field = createField()
         this.field.forEach(el => el.forEach(piece => {if (piece) this[piece.color].pieces.push(piece)}))
         this.availableMoves = availableMoves('white', this)

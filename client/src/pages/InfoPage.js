@@ -21,28 +21,33 @@ export const InfoPage = () => {
     if (loading) {
         return <Loader />
     }
-    return (
-        <div className="container">
-            <table className="table table-dark table-hover table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Противник</th>
-                    <th scope="col">Результат</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                {games.map((game, i) => (
-                        <tr key = {game._id}>
-                            <th scope="row">{i + 1}</th>
-                            <td>{game.creator === name ? game.player : game.creator}</td>
-                            <td className={game.winner === name ? 'text-success' : game.winner === 'draw' ? 'text-info' : 'text-danger'}>{game.winner === name ? 'победа' : game.winner === 'draw' ? 'ничья' : 'поражение'}</td>
-                        </tr>
-                    )
-                )}
-                </tbody>
-            </table>
+    return (
+        <div className="container" >
+            <div className="table-container" style={{height: '800px'}}>
+                <table className="table table-hover table-striped table-sm" >
+                    <thead className="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Противник</th>
+                        <th scope="col">Результат</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {games.map((game, i) => (
+                            <tr key = {game._id}>
+                                <th scope="row">{i + 1}</th>
+                                <td>{new Date(game.time).toLocaleDateString()}</td>
+                                <td>{game.creator === name ? game.player : game.creator}</td>
+                                <td className={game.winner === name ? 'text-success' : game.winner === 'draw' ? 'text-info' : 'text-danger'}>{game.winner === name ? 'победа' : game.winner === 'draw' ? 'ничья' : 'поражение'}</td>
+                            </tr>
+                        )
+                    )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

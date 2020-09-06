@@ -5,14 +5,29 @@ const {saveGame} = require("../models/mongoFunctions");
 
 // const availableMoves = require('../moves')
 const games = []
+const playersInLobby = {}
 
 module.exports = (play) => {
 
 
     play.on('connection', socket => {
+        // console.log('connection')
+        socket.on('disconnect', () => {
+            delete playersInLobby[socket.id]
+            play.emit('playersInLobby', Object.values(playersInLobby))
+
+        })
 
         socket.on('ready', name => {
-            // console.log('name',name)
+
+            User.find({}, (err, users)=>{
+                if (err) console.log(err)
+                socket.emit('leaders', users.map(user => ({name:user.login, rating:user.rating})))
+            }).sort({rating: -1})
+                .limit(10)
+            playersInLobby[socket.id] = name
+            // console.log(playersInLobby)
+            play.emit('playersInLobby', Object.values(playersInLobby))
             const game = games.find(game => game[name])
             if (game && game.full) {
                 socket.emit('game connect', game.id)
@@ -21,16 +36,17 @@ module.exports = (play) => {
                 User.findOne({login: name}, (err, user) => {
 
                     if (err) console.log(err)
-                    // else console.log('user',user)
+
                     else socket.emit('rating', user.rating)
                 })
                 socket.emit('baseGames', games)
+
             }
 
         })
 
-        socket.on('send game', (name, rating) => {
-            const game = new Game(name, rating, socket.id, 'chess', 100000)
+        socket.on('send game', (name, rating, settings) => {
+            const game = new Game(name, rating, socket.id, 'chess', settings)
             const gameDb = new Game_db(game)
             game._id = gameDb._id
             gameDb.save()
@@ -49,11 +65,11 @@ module.exports = (play) => {
             const selfGame = games.find(game => game.creator === name)
             if (selfGame) games.splice(games.indexOf(selfGame), 1)
             const game = games.find(game => game.id === id)
-            if (!game) return false
+            if (!game || game.full) return false
             game.connect(name, rating)
             socket.emit('game connect', id)
             play.to(game.creatorSocketId).emit('game connect', id)
-
+            play.emit('baseGames', games)
         })
 
         socket.on('connected to game', (id, name) => {
@@ -77,7 +93,9 @@ module.exports = (play) => {
 
             // setTimeout(()=>{play.to(id).emit('endGame', game)}, 1500)
             play.to(id).emit('endGame', game)
+            play.emit('baseGames', games)
             saveGame(game)
+
         })
 
         socket.on('move', (move, id, name) => {
@@ -89,6 +107,7 @@ module.exports = (play) => {
                 games.splice(games.indexOf(game), 1)
                 game.loseTime = null
                 play.to(id).emit('endGame', game)
+                play.emit('baseGames', games)
                 saveGame(game)
             } else {
                 game.loseTime = setTimeout(() => {
@@ -97,9 +116,9 @@ module.exports = (play) => {
                     game.loseTime = null
                     play.to(id).emit('endGame', game)
                     games.splice(games.indexOf(game), 1)
+                    play.emit('baseGames', games)
                     saveGame(game)
                 }, game[game.turnColor].time)
-                // setTimeout(()=>{play.to(id).emit('game', {...game, turnColor: game.turnColor, loseTime: null})}, 1500)
                 play.to(id).emit('game', {...game, turnColor: game.turnColor, loseTime: null})
             }
 

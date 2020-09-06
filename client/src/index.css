@@ -1,5 +1,6 @@
 body {
   /*background-color: rgb(256,240,240) !important;*/
+  background-color: rgba(0,0,0,0.05)!important;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -41,33 +42,40 @@ code {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-#canvas {
-  position: relative;
-  width: 300px;
-  height: 300px;
-}
+/*#canvas {*/
+/*  position: relative;*/
+/*  width: 300px;*/
+/*  height: 300px;*/
+/*}*/
 #cont {
   width: 800px;
   height: 800px;
   /*margin: 100px auto;*/
-  border: 1px solid #848484;
+  outline: 1px solid rgb(130,130,130);
 }
 #canvasChess {
   position: relative;
   width: 800px;
   height: 800px;
 }
+.table-container {
+  /*height: 200px;*/
+  overflow-y: scroll;
 
-#exit{
-  /*color: #343a40!important;*/
-  /*background-color: #848484!important;*/
-  border: none!important;
 }
-#giveUp{
-  /*color: #343a40!important;*/
-  /*background-color: #848484!important;*/
-  border: none!important;
+.table-container::-webkit-scrollbar {
+  width: 0px;
 }
+/*#exit{*/
+/*  !*color: #343a40!important;*!*/
+/*  !*background-color: #848484!important;*!*/
+/*  border: none!important;*/
+/*}*/
+/*#giveUp{*/
+/*  !*color: #343a40!important;*!*/
+/*  !*background-color: #848484!important;*!*/
+/*  border: none!important;*/
+/*}*/
 
 /*.chessInfo {*/
 /*  width: 300px;*/
@@ -78,4 +86,16 @@ code {
 /*.navbar {*/
 /*  !*border-bottom: 1px dashed #28a745;*!*/
 /*  !*background: linear-gradient(rgb(156,100,100), rgb(256,200,200));*!*/
+/*}*/
+
+/*.custom-range::-webkit-slider-thumb {*/
+/*  background: black!important;*/
+/*}*/
+
+/*.custom-range::-moz-range-thumb {*/
+/*  background: black!important;*/
+/*}*/
+
+/*.custom-range::-ms-thumb {*/
+/*  background: black!important;*/
 /*}*/

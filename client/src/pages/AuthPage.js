@@ -58,7 +58,8 @@ export const AuthPage = () => {
                         onChange={changeHandler}
                     />
                     <button
-                        className="btn btn-lg btn-primary btn-block"
+                        type="button"
+                        className="btn btn-lg btn-outline-success btn-block"
                         onClick={registerHandler}
                     >Отправить
                     </button>
@@ -92,7 +93,8 @@ export const AuthPage = () => {
                         onChange = {changeHandler}
                     />
                     <button
-                        className="btn btn-lg btn-primary btn-block"
+                        type="button"
+                        className="btn btn-lg btn-outline-success btn-block"
                         onClick={loginHandler}
                     >Войти</button>
                 </form>
