@@ -3,6 +3,7 @@ import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext"
 
 export const AuthPage = () => {
+    const [message, setMessage] = useState('')
     const {request} = useHttp()
     const {login, page, setPage} = useContext(AuthContext)
     const [form, setForm] = useState({
@@ -18,20 +19,29 @@ export const AuthPage = () => {
         event.preventDefault()
         try {
             const data = await request('/api/auth/login', 'POST', {...form})
-            // console.log(data)
             login(data.token, data.userId, data.name)
-        } catch (e) {}
+        } catch (e) {
+            setMessage(e.message)
+            setTimeout(()=>{setMessage('')},1000)
+        }
     }
 
     const registerHandler = async (event) => {
         event.preventDefault()
         try {
             const data = await request('/api/auth/register', 'POST', {...form})
-            console.log(data.message)
-            if (data.message === 'user created') setPage('login')
+
+            if (data.message === 'Пользователь создан') {
+                setPage('login')
+                setMessage(data.message)
+                setTimeout(()=>{setMessage('')},1000)
+            }
         } catch (e) {
-            console.log(e.message)
+
+            setMessage(e.message)
+            setTimeout(()=>{setMessage('')},1000)
         }
+        // console.log(error)
     }
 
     if (page === 'register') {
@@ -63,7 +73,10 @@ export const AuthPage = () => {
                         onClick={registerHandler}
                     >Отправить
                     </button>
+
+                    {message && <div className={`alert alert-${message === 'Пользователь создан' ? 'success' : 'danger'} mt-2`}>{message}</div>}
                 </form>
+
             </div>
         )
     }
@@ -97,8 +110,11 @@ export const AuthPage = () => {
                         className="btn btn-lg btn-outline-success btn-block"
                         onClick={loginHandler}
                     >Войти</button>
+                    {message && <div className={`alert alert-${message === 'Пользователь создан' ? 'success' : 'danger'} mt-2`}>{message}</div>}
                 </form>
+
             </div>
         )
     }
+
 }

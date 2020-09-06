@@ -104,14 +104,14 @@ export const ChessPage = () => {
     return (
     <div className="row mt-5">
 
-        <div className="col-3">
+        <div className="col-xl-2">
         </div>
-        <div className="col-6 justify-content-md-center">
+        <div className="col-auto">
             <div id="cont">
                 <canvas id="canvasChess" ref={canvas} onClick={click} width="800" height="800"/>
             </div>
         </div>
-        <div className="col-3 align-self-center">
+        <div className="col  col-xl-2 align-self-center">
             <ChessInfo game={game} name={name}/>
 
         </div>

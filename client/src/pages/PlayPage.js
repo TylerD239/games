@@ -4,14 +4,14 @@ import {Game} from '../components/Game'
 import {AuthContext} from "../context/AuthContext"
 import {IoContext} from "../context/IoContext";
 import {GameSettings} from "../components/GameSettings";
+import {Loader} from "../components/Loader";
 // import {PlayersInLobby} from "../components/PlayersInLobby";
 
 
 export const PlayPage = ({type}) => {
 
-    // const {playSocket} = useContext(IoContext)
+
     const {chessSocket} = useContext(IoContext)
-    // const socket = type === 'chess' ? sockets.chessSocket : type === 'cross' ? sockets.crossSocket : null
     const {name} = useContext(AuthContext)
     const [games, setGames] = useState([])
     const [createdGame, setCreatedGame] = useState(false)
@@ -19,8 +19,6 @@ export const PlayPage = ({type}) => {
     const [rating, setRating] = useState(0)
     const [players,  setPlayers] = useState([])
     const history = useHistory()
-
-    // const createGame = () => {if (games.every((game) => game.creator !== name)) chessSocket.emit('send game', name, rating)}
 
     useEffect( () => {
 
@@ -86,6 +84,10 @@ export const PlayPage = ({type}) => {
                     <button type="button" className="btn btn-dark btn-lg btn-block" onClick={()=>{history.push('/info')}}>
                         <span className="font-weight-bold">{name}</span><span className="font-weight-light">({rating || '...'})</span>
                     </button>
+                    {leaders.length === 0
+                        ?
+                        <Loader />
+                        :
                     <table className="table table-hover mt-5">
                         <thead className="thead-dark">
                             <tr>
@@ -95,6 +97,7 @@ export const PlayPage = ({type}) => {
                             </tr>
                         </thead>
                         <tbody>
+
                         {leaders.map((leader, i) => (
                             <tr className="table-light" key={leader.name}>
                                 <th scope="row">{i + 1}</th>
@@ -104,6 +107,7 @@ export const PlayPage = ({type}) => {
 
                         </tbody>
                     </table>
+                    }
                 </div>
             </div>
         </div>
