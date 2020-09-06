@@ -35,12 +35,12 @@ const pieces = {
 
 // console.log(black_king)
 
-const drawBoard = (field, color, canvas) => {
+const drawBoard = (field, color, canvas, size) => {
     const ctx = canvas.getContext('2d')
 
 
     ctx.fillStyle = 'rgb(130,130,130)'
-    ctx.fillRect(0, 0, 800, 800)
+    ctx.fillRect(0, 0, 8 * size, 8 * size)
     ctx.fillStyle = 'rgb(240,240,240)'
     //
     // ctx.fillStyle = '#D7A887'
@@ -49,24 +49,24 @@ const drawBoard = (field, color, canvas) => {
 
     for (let i = 0; i < 8; i++) {
         for (let k = i % 2; k < 8; k += 2) {
-            ctx.fillRect(i * 100, k * 100, 100, 100)
+            ctx.fillRect(i * size, k * size, size, size)
         }
     }
     for (let y = 0; y < 8; y++){
         for (let x = 0; x < 8; x++){
             if (field[y][x]) {
-                const X = color === 'white' ? x * 100 : (7-x) * 100
-                const Y = color === 'white' ? y * 100 : (7-y) * 100
+                const X = color === 'white' ? x * size : (7-x) * size
+                const Y = color === 'white' ? y * size : (7-y) * size
 
                 const img = field[y][x].color + '_' + field[y][x].piece
-                ctx.drawImage(pieces[img].image, X, Y, 100,100);
+                ctx.drawImage(pieces[img].image, X, Y, size,size);
 
             }
         }
     }
 }
 
-const drawMoves = (field, color, cell, moves, canvas) => {
+const drawMoves = (field, color, cell, moves, canvas, size) => {
     const ctx = canvas.getContext('2d')
     ctx.lineWidth = 4
     ctx.strokeStyle = 'rgba(250,199,80,0.8)'
@@ -74,15 +74,15 @@ const drawMoves = (field, color, cell, moves, canvas) => {
         cell.x = 7 - cell.x
         cell.y = 7 - cell.y
     }
-    ctx.strokeRect(cell.x * 100 + 2, cell.y * 100 + 2,96,96)
+    ctx.strokeRect(cell.x * size + 2, cell.y * size + 2,size - 4,size - 4)
 
     moves.forEach(move => {
         ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.8)' : 'rgba(250,199,80,0.8)'
 
-        const X = color === 'white' ? move.x * 100 : (7 - move.x) * 100
-        const Y = color === 'white' ? move.y * 100 : (7 - move.y) * 100
+        const X = color === 'white' ? move.x * size : (7 - move.x) * size
+        const Y = color === 'white' ? move.y * size : (7 - move.y) * size
 
-        ctx.strokeRect(X + 2, Y + 2,96,96)
+        ctx.strokeRect(X + 2, Y + 2,size - 4,size - 4)
     })
 }
 
@@ -94,13 +94,13 @@ const drawMoves = (field, color, cell, moves, canvas) => {
 //         cell.x = 7 - cell.x
 //         cell.y = 7 - cell.y
 //     }
-//     ctx.strokeRect(cell.x * 100 + 10, cell.y * 100 + 10,80,80)
+//     ctx.strokeRect(cell.x * size + 10, cell.y * size + 10,80,80)
 //
 //     moves.forEach(move => {
 //         ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.4)' : 'rgba(250,199,80,0.4)'
 //
-//         const X = color === 'white' ? move.x * 100 : (7 - move.x) * 100
-//         const Y = color === 'white' ? move.y * 100 : (7 - move.y) * 100
+//         const X = color === 'white' ? move.x * size : (7 - move.x) * size
+//         const Y = color === 'white' ? move.y * size : (7 - move.y) * size
 //
 //         ctx.strokeRect(X + 10, Y + 10,80,80)
 //     })
@@ -114,15 +114,15 @@ const drawMoves = (field, color, cell, moves, canvas) => {
 //         cell.x = 7 - cell.x
 //         cell.y = 7 - cell.y
 //     }
-//     ctx.fillRect(cell.x * 100, cell.y * 100,100,100)
+//     ctx.fillRect(cell.x * size, cell.y * size,size,size)
 //
 //     moves.forEach(move => {
 //         ctx.fillStyle = move.ate ? 'rgba(250,95,72,0.4)' : 'rgba(250,199,80,0.4)'
 //
-//         const X = color === 'white' ? move.x * 100 : (7 - move.x) * 100
-//         const Y = color === 'white' ? move.y * 100 : (7 - move.y) * 100
+//         const X = color === 'white' ? move.x * size : (7 - move.x) * size
+//         const Y = color === 'white' ? move.y * size : (7 - move.y) * size
 //
-//         ctx.fillRect(X, Y,100,100)
+//         ctx.fillRect(X, Y,size,size)
 //     })
 // }
 

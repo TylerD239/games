@@ -5,7 +5,7 @@ import {AuthContext} from "../context/AuthContext";
 import {drawBoard, drawMoves} from "../chess/board";
 // import {Time} from "../components/Time";
 import {ChessInfo} from "../components/ChessInfo";
-import {Loader} from "../components/Loader";
+// import {Loader} from "../components/Loader";
 
 
 
@@ -22,17 +22,17 @@ export const ChessPage = () => {
         raisedPiece: {},
         pieceMoves: []
     })
-
+    // const [windowWidth, setWindowWidth] = useState(0)
+    const [size, setSize] = useState(100)
     const [game, setGame] = useState(null)
-    // const [winner, setWinner] = useState(null)
     const {name} = useContext(AuthContext)
     const {chessSocket} = useContext(IoContext)
 
     function cellDetect(coord) {
         return game[name].color === 'white' ?
-            {y : Math.floor(coord.offsetY / 100), x: Math.floor(coord.offsetX / 100)}
+            {y : Math.floor(coord.offsetY / size), x: Math.floor(coord.offsetX / size)}
             :
-            {y : 7 - Math.floor(coord.offsetY / 100), x:  7 - Math.floor(coord.offsetX / 100)}
+            {y : 7 - Math.floor(coord.offsetY / size), x:  7 - Math.floor(coord.offsetX / size)}
     }
 
 
@@ -52,7 +52,7 @@ export const ChessPage = () => {
                 ref.current.raisedPiece = piece
                 const moves = game.availableMoves[piece.id] || []
                 ref.current.pieceMoves = moves
-                drawMoves(game.field, game[name].color, cell, moves, canvas.current)
+                drawMoves(game.field, game[name].color, cell, moves, canvas.current, size)
             }
         }
 
@@ -63,15 +63,34 @@ export const ChessPage = () => {
                 ref.current.pieceMoves = []
                 chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move}, id, name)
             } else {
-                drawBoard(game.field, game[name].color, canvas.current)
+                drawBoard(game.field, game[name].color, canvas.current, size)
             }
             ref.current.raisedPiece = {}
         }
         ref.current.raised = !ref.current.raised
     }
+    // useEffect(()=> {
+    //     const width = window.innerWidth
+    //     if (width > 800) setSize(100)
+    //     else setSize(Math.floor(Math.floor(window.innerWidth / 8) / 10) * 10)
+    //     console.log(canvas)
+    //     canvas.current.width = size * 8
+    //     canvas.current.height = size * 8
+    // }, [size])
+useEffect(()=> {
+    // console.log(canvas, game)
+    if (canvas.current) {
+        const width = window.innerWidth
+        const s = width > 800 ? 100 : Math.floor(Math.floor(window.innerWidth / 8) / 10) * 10
+        setSize(s)
 
-
-
+        canvas.current.width = s * 8
+        canvas.current.height = s * 8
+        // console.log(canvas.current.style)
+        canvas.current.style.height = s * 8 + 'px'
+        canvas.current.style.width = s * 8 + 'px'
+    }
+},[])
 
     useEffect( () => {
 
@@ -79,16 +98,15 @@ export const ChessPage = () => {
 
         chessSocket.on('endGame', game => {
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current)
-            // setWinner(game.winner)
-            // alert(game.winner)
+            drawBoard(game.field, game[name].color, canvas.current,size)
+
         })
 
         chessSocket.on('game', game => {
             // if (!game) history.push('/playChess')
             ref.current.moved = false
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current)
+            drawBoard(game.field, game[name].color, canvas.current, size)
         })
         //
         chessSocket.on('go away', () => {
@@ -96,10 +114,10 @@ export const ChessPage = () => {
         })
 
         return () => chessSocket.removeAllListeners()
-    },[chessSocket, history, name, id])
+    },[chessSocket, history, name, id, size])
 
 
-    if (!game) return <Loader/>
+    // if (!game) return <Loader/>
 
     return (
     <div className="row mt-5">
@@ -107,12 +125,12 @@ export const ChessPage = () => {
         <div className="col-xl-2">
         </div>
         <div className="col-auto">
-            <div id="cont">
-                <canvas id="canvasChess" ref={canvas} onClick={click} width="800" height="800"/>
-            </div>
+            {/*<div id="cont">*/}
+                <canvas id="canvasChess" ref={canvas} onClick={click}/>
+            {/*</div>*/}
         </div>
         <div className="col  col-xl-2 align-self-center">
-            <ChessInfo game={game} name={name}/>
+            {game && <ChessInfo game={game} name={name}/>}
 
         </div>
 

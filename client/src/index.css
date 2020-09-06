@@ -48,15 +48,15 @@ code {
 /*  height: 300px;*/
 /*}*/
 #cont {
-  width: 800px;
-  height: 800px;
+  /*width: 800px;*/
+  /*height: 800px;*/
   /*margin: 100px auto;*/
   outline: 1px solid rgb(130,130,130);
 }
 #canvasChess {
   position: relative;
-  width: 800px;
-  height: 800px;
+  /*width: 800px;*/
+  /*height: 800px;*/
 }
 .table-container {
   /*height: 200px;*/
