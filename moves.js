@@ -5,12 +5,15 @@ const availableMoves = (color,game) => {
     const color2 = game.getOpponent(color)
     const allMoves = {}
 
-    if (game[color2].pieces
+    game[color2].check = false
+    game.check = null
+    game[color].check = game[color2].pieces
         .some(el => pieceMoves({x: el.position.x, y: el.position.y}, field, color2)
-            .some(move => move.ate.piece === 'king'))) {
-        game[color].check = true
+            .some(move => move.ate.piece === 'king'));
+    if (game[color].check)  {
+        const king = game[color].pieces.find(piece => piece.piece === 'king')
+        game.check = {y: king.position.y, x: king.position.x}
     }
-
     // console.log('==========================================')
     game[color].pieces.forEach( el => {
 

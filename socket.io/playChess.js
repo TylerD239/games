@@ -62,10 +62,10 @@ module.exports = (play) => {
         })
 
         socket.on('join game', (id, name, rating) => {
-            const selfGame = games.find(game => game.creator === name)
-            if (selfGame) games.splice(games.indexOf(selfGame), 1)
             const game = games.find(game => game.id === id)
             if (!game || game.full) return false
+            const selfGame = games.find(game => game.creator === name)
+            if (selfGame) games.splice(games.indexOf(selfGame), 1)
             game.connect(name, rating)
             socket.emit('game connect', id)
             play.to(game.creatorSocketId).emit('game connect', id)
@@ -85,13 +85,22 @@ module.exports = (play) => {
         socket.on('giveUp', (name, id) => {
             const game = games.find(game => game.id === id)
             if (!game) return false
-            // console.log(id, game)
             clearTimeout(game.loseTime)
             game.setWinner = game.getOpponent(name)
             games.splice(games.indexOf(game), 1)
             game.loseTime = null
+            play.to(id).emit('endGame', game)
+            play.emit('baseGames', games)
+            saveGame(game)
 
-            // setTimeout(()=>{play.to(id).emit('endGame', game)}, 1500)
+        })
+        socket.on('cancel', id => {
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            if (game.moves.length !== 0) return false
+
+            game.setWinner = 'cancel'
+            games.splice(games.indexOf(game), 1)
             play.to(id).emit('endGame', game)
             play.emit('baseGames', games)
             saveGame(game)

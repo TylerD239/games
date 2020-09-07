@@ -47,13 +47,13 @@ export const ChessPage = () => {
 
             const piece = game.field[cell.y][cell.x]
 
-            if (piece && piece.color === game[name].color) {
+            if (!piece || piece.color !== game[name].color) return false
 
                 ref.current.raisedPiece = piece
                 const moves = game.availableMoves[piece.id] || []
                 ref.current.pieceMoves = moves
                 drawMoves(game.field, game[name].color, cell, moves, canvas.current, size)
-            }
+
         }
 
         if (ref.current.raised) {
@@ -63,7 +63,7 @@ export const ChessPage = () => {
                 ref.current.pieceMoves = []
                 chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move}, id, name)
             } else {
-                drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1])
+                drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
             }
             ref.current.raisedPiece = {}
         }
@@ -91,7 +91,8 @@ useEffect(()=> {
 
         chessSocket.on('endGame', game => {
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current,size, game.moves[game.moves.length - 1])
+            drawBoard(game.field, game[name].color, canvas.current,size, game.moves[game.moves.length - 1], game.check)
+            // drawBoard(game, canvas.current,size)
 
         })
 
@@ -99,7 +100,7 @@ useEffect(()=> {
             if (!game) history.push('/playChess')
             ref.current.moved = false
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1])
+            drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
         })
         //
         chessSocket.on('go away', () => {

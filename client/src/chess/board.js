@@ -35,7 +35,7 @@ const pieces = {
 
 // console.log(black_king)
 
-const drawBoard = (field, color, canvas, size, lastMove) => {
+const drawBoard = (field, color, canvas, size, lastMove, check) => {
     const ctx = canvas.getContext('2d')
 
 
@@ -52,6 +52,13 @@ const drawBoard = (field, color, canvas, size, lastMove) => {
             ctx.fillRect(i * size, k * size, size, size)
         }
     }
+    if (check) {
+        const X = color === 'black' ? 7 - check.x : check.x
+        const Y = color === 'black' ? 7 - check.y : check.y
+        ctx.fillStyle = 'rgba(256,100,100,0.2)'
+        ctx.fillRect(X * size, Y * size, size, size)
+
+    }
 
     if (lastMove) {
         const fromX = color === 'black' ? 7 - lastMove.piece.position.x : lastMove.piece.position.x
@@ -63,6 +70,7 @@ const drawBoard = (field, color, canvas, size, lastMove) => {
         ctx.fillStyle = 'rgba(130,256,130,0.3)'
         ctx.fillRect(toX * size, toY * size, size, size)
     }
+    // if ()
 
     for (let y = 0; y < 8; y++){
         for (let x = 0; x < 8; x++){

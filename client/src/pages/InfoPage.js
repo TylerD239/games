@@ -41,7 +41,7 @@ export const InfoPage = () => {
                                 <th scope="row">{i + 1}</th>
                                 <td>{new Date(game.time).toLocaleDateString()}</td>
                                 <td>{game.creator === name ? game.player : game.creator}</td>
-                                <td className={game.winner === name ? 'text-success' : game.winner === 'draw' ? 'text-info' : 'text-danger'}>{game.winner === name ? 'победа' : game.winner === 'draw' ? 'ничья' : 'поражение'}</td>
+                                <td className={game.winner === name ? 'text-success' : game.winner === 'draw' ? 'text-info' : 'text-danger'}>{game.winner === name ? 'победа' : game.winner === 'draw' ? 'ничья' : game.winner === 'cancel' ? 'Отменена' : 'поражение'}</td>
                             </tr>
                         )
                     )}

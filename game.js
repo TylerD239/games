@@ -3,6 +3,7 @@ const availableMoves = require('./moves')
 
 class Game {
     constructor(name, rating, creatorSocketId, type, settings) {
+        this.started = false
         this.colorFormat = settings.color
         this[name] = {rating}
         this.timeFormat = settings.min * 60000
@@ -56,8 +57,12 @@ class Game {
         const color = move.piece.color
         const color2 = color === 'white' ? 'black' : 'white'
 
-        this[color].time -= Date.now() - this.lastTime
+        if (this.moves.length) {
+            this[color].time -= Date.now() - this.lastTime
+            this[color].time += this.addTime * 1000
+        }
         this.lastTime = Date.now()
+
 
         // console.log(move)
         if (move.piece.piece === 'pawn' && (move.to.y === 0 || move.to.y === 7)) {
@@ -94,7 +99,7 @@ class Game {
         this.moves.push(move)
         this[color].moves.push(move)
         this.turn++
-        this[color].time += this.addTime * 1000
+
         this.availableMoves = availableMoves(this.turnColor, this)
 
     }
@@ -127,7 +132,7 @@ class Game {
             this[this.colorFormat].name = this.creator
             this[this.getOpponent(this.colorFormat)].name = this.player
         }
-        this.lastTime = Date.now()
+        // this.lastTime = Date.now()
         this.full = true
         this.player = name
         this.turn = 1
