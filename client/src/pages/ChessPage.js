@@ -63,30 +63,23 @@ export const ChessPage = () => {
                 ref.current.pieceMoves = []
                 chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move}, id, name)
             } else {
-                drawBoard(game.field, game[name].color, canvas.current, size)
+                drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1])
             }
             ref.current.raisedPiece = {}
         }
         ref.current.raised = !ref.current.raised
     }
-    // useEffect(()=> {
-    //     const width = window.innerWidth
-    //     if (width > 800) setSize(100)
-    //     else setSize(Math.floor(Math.floor(window.innerWidth / 8) / 10) * 10)
-    //     console.log(canvas)
-    //     canvas.current.width = size * 8
-    //     canvas.current.height = size * 8
-    // }, [size])
+
 useEffect(()=> {
-    // console.log(canvas, game)
+
     if (canvas.current) {
-        const width = window.innerWidth
-        const s = width > 800 ? 100 : Math.floor(Math.floor(window.innerWidth / 8) / 10) * 10
+        const less = Math.min(window.innerHeight - 100, window.innerWidth)
+        // console.log(less)
+        const s = less > 800 ? 100 : Math.floor(Math.floor(less / 8) / 10) * 10
         setSize(s)
 
         canvas.current.width = s * 8
         canvas.current.height = s * 8
-        // console.log(canvas.current.style)
         canvas.current.style.height = s * 8 + 'px'
         canvas.current.style.width = s * 8 + 'px'
     }
@@ -98,15 +91,15 @@ useEffect(()=> {
 
         chessSocket.on('endGame', game => {
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current,size)
+            drawBoard(game.field, game[name].color, canvas.current,size, game.moves[game.moves.length - 1])
 
         })
 
         chessSocket.on('game', game => {
-            // if (!game) history.push('/playChess')
+            if (!game) history.push('/playChess')
             ref.current.moved = false
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current, size)
+            drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1])
         })
         //
         chessSocket.on('go away', () => {
@@ -122,14 +115,14 @@ useEffect(()=> {
     return (
     <div className="row mt-5">
 
-        <div className="col-xl-2">
+        <div className="col-xl-3">
         </div>
         <div className="col-auto">
-            {/*<div id="cont">*/}
+            <div id="cont">
                 <canvas id="canvasChess" ref={canvas} onClick={click}/>
-            {/*</div>*/}
+            </div>
         </div>
-        <div className="col  col-xl-2 align-self-center">
+        <div className="col align-self-center">
             {game && <ChessInfo game={game} name={name}/>}
 
         </div>

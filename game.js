@@ -56,10 +56,14 @@ class Game {
         const color = move.piece.color
         const color2 = color === 'white' ? 'black' : 'white'
 
-
-
         this[color].time -= Date.now() - this.lastTime
         this.lastTime = Date.now()
+
+        // console.log(move)
+        if (move.piece.piece === 'pawn' && (move.to.y === 0 || move.to.y === 7)) {
+            this[color].pieces.find(piece => piece.id === move.piece.id).piece = 'queen'
+        }
+
 
         if (move.to.ate) {
             const eatenPiece = this.field[move.to.y][move.to.x]

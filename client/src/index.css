@@ -51,6 +51,10 @@ code {
   /*width: 800px;*/
   /*height: 800px;*/
   /*margin: 100px auto;*/
+  display: inline-block;
+  font-size:0;
+  margin-bottom: 6px;
+  /*float:left;*/
   outline: 1px solid rgb(130,130,130);
 }
 #canvasChess {

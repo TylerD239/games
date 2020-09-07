@@ -35,7 +35,7 @@ const pieces = {
 
 // console.log(black_king)
 
-const drawBoard = (field, color, canvas, size) => {
+const drawBoard = (field, color, canvas, size, lastMove) => {
     const ctx = canvas.getContext('2d')
 
 
@@ -52,6 +52,18 @@ const drawBoard = (field, color, canvas, size) => {
             ctx.fillRect(i * size, k * size, size, size)
         }
     }
+
+    if (lastMove) {
+        const fromX = color === 'black' ? 7 - lastMove.piece.position.x : lastMove.piece.position.x
+        const fromY = color === 'black' ? 7 - lastMove.piece.position.y : lastMove.piece.position.y
+        const toX = color === 'black' ? 7 - lastMove.to.x : lastMove.to.x
+        const toY = color === 'black' ? 7 - lastMove.to.y : lastMove.to.y
+        ctx.fillStyle = 'rgba(130,256,130,0.2)'
+        ctx.fillRect(fromX * size, fromY * size, size, size)
+        ctx.fillStyle = 'rgba(130,256,130,0.3)'
+        ctx.fillRect(toX * size, toY * size, size, size)
+    }
+
     for (let y = 0; y < 8; y++){
         for (let x = 0; x < 8; x++){
             if (field[y][x]) {
@@ -59,17 +71,18 @@ const drawBoard = (field, color, canvas, size) => {
                 const Y = color === 'white' ? y * size : (7-y) * size
 
                 const img = field[y][x].color + '_' + field[y][x].piece
-                ctx.drawImage(pieces[img].image, X, Y, size,size);
+                ctx.drawImage(pieces[img].image, X, Y, size, size)
 
             }
         }
     }
+
 }
 
 const drawMoves = (field, color, cell, moves, canvas, size) => {
     const ctx = canvas.getContext('2d')
     ctx.lineWidth = 4
-    ctx.strokeStyle = 'rgba(250,199,80,0.8)'
+    ctx.strokeStyle = 'rgba(250,199,80,0.5)'
     if (color === 'black') {
         cell.x = 7 - cell.x
         cell.y = 7 - cell.y
@@ -77,54 +90,20 @@ const drawMoves = (field, color, cell, moves, canvas, size) => {
     ctx.strokeRect(cell.x * size + 2, cell.y * size + 2,size - 4,size - 4)
 
     moves.forEach(move => {
-        ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.8)' : 'rgba(250,199,80,0.8)'
+        // ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.8)' : 'rgba(250,199,80,0.8)'
+        ctx.fillStyle = move.ate ? 'rgba(250,95,72,0.9)' : 'rgba(250,199,80,0.9)'
 
-        const X = color === 'white' ? move.x * size : (7 - move.x) * size
-        const Y = color === 'white' ? move.y * size : (7 - move.y) * size
-
-        ctx.strokeRect(X + 2, Y + 2,size - 4,size - 4)
+        // const X = color === 'white' ? move.x * size : (7 - move.x) * size
+        // const Y = color === 'white' ? move.y * size : (7 - move.y) * size
+        const X = color === 'white' ? move.x : (7 - move.x)
+        const Y = color === 'white' ? move.y : (7 - move.y)
+        ctx.beginPath()
+        ctx.arc(X * size + size / 2 , Y * size + size / 2,size / 8,0, Math.PI * 2)
+        ctx.fill()
+        // ctx.strokeRect(X + 2, Y + 2,size - 4,size - 4)
     })
 }
 
-// const drawMoves = (field, color, cell, moves, canvas) => {
-//     const ctx = canvas.getContext('2d')
-//     ctx.lineWidth = 20
-//     ctx.strokeStyle = 'rgba(209,255,168,0.4)'
-//     if (color === 'black') {
-//         cell.x = 7 - cell.x
-//         cell.y = 7 - cell.y
-//     }
-//     ctx.strokeRect(cell.x * size + 10, cell.y * size + 10,80,80)
-//
-//     moves.forEach(move => {
-//         ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.4)' : 'rgba(250,199,80,0.4)'
-//
-//         const X = color === 'white' ? move.x * size : (7 - move.x) * size
-//         const Y = color === 'white' ? move.y * size : (7 - move.y) * size
-//
-//         ctx.strokeRect(X + 10, Y + 10,80,80)
-//     })
-// }
-
-// const drawMoves = (field, color, cell, moves, canvas) => {
-//     const ctx = canvas.getContext('2d')
-//
-//     ctx.fillStyle = 'rgba(209,255,168,0.4)'
-//     if (color === 'black') {
-//         cell.x = 7 - cell.x
-//         cell.y = 7 - cell.y
-//     }
-//     ctx.fillRect(cell.x * size, cell.y * size,size,size)
-//
-//     moves.forEach(move => {
-//         ctx.fillStyle = move.ate ? 'rgba(250,95,72,0.4)' : 'rgba(250,199,80,0.4)'
-//
-//         const X = color === 'white' ? move.x * size : (7 - move.x) * size
-//         const Y = color === 'white' ? move.y * size : (7 - move.y) * size
-//
-//         ctx.fillRect(X, Y,size,size)
-//     })
-// }
 
 
 export {drawBoard, drawMoves}
