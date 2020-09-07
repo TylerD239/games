@@ -45,7 +45,7 @@ export const GameSettings = ({setCreatedGame, rating}) => {
                     max="30"
                     id="customRange2"
                 />
-            <button type="button" onClick={createGame} className="btn btn-outline-success mt-3 btn-lg" >Создать</button>
+            {rating && <button type="button" onClick={createGame} className="btn btn-outline-success mt-3 btn-lg" >Создать</button>}
         </div>
 
     )

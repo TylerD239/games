@@ -16,7 +16,7 @@ export const PlayPage = ({type}) => {
     const [games, setGames] = useState([])
     const [createdGame, setCreatedGame] = useState(false)
     const [leaders, setLeaders] = useState([])
-    const [rating, setRating] = useState(0)
+    const [rating, setRating] = useState(null)
     const [players,  setPlayers] = useState([])
     const history = useHistory()
 
@@ -35,6 +35,8 @@ export const PlayPage = ({type}) => {
     useEffect(()=> {
         if (games.some(game => game.creator === name && !game.full)) setCreatedGame(true)
     },[games,name])
+
+
 
 
     return (

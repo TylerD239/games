@@ -1,17 +1,17 @@
 // import React from "react";
-import black_king from '../pieces/black_king.png'
-import black_bishop from '../pieces/black_bishop.png'
-import black_knight from '../pieces/black_knight.png'
-import black_pawn from '../pieces/black_pawn.png'
-import black_queen from '../pieces/black_queen.png'
-import black_rook from '../pieces/black_rook.png'
+import black_king from '../pieces/black_king.svg'
+import black_bishop from '../pieces/black_bishop.svg'
+import black_knight from '../pieces/black_knight.svg'
+import black_pawn from '../pieces/black_pawn.svg'
+import black_queen from '../pieces/black_queen.svg'
+import black_rook from '../pieces/black_rook.svg'
 
-import white_king from '../pieces/white_king.png'
-import white_bishop from '../pieces/white_bishop.png'
-import white_knight from '../pieces/white_knight.png'
-import white_pawn from '../pieces/white_pawn.png'
-import white_queen from '../pieces/white_queen.png'
-import white_rook from '../pieces/white_rook.png'
+import white_king from '../pieces/white_king.svg'
+import white_bishop from '../pieces/white_bishop.svg'
+import white_knight from '../pieces/white_knight.svg'
+import white_pawn from '../pieces/white_pawn.svg'
+import white_queen from '../pieces/white_queen.svg'
+import white_rook from '../pieces/white_rook.svg'
 
 const PieceImage = function (piece) {
     this.image = new Image()

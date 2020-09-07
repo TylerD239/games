@@ -11,7 +11,7 @@ module.exports = (play) => {
 
 
     play.on('connection', socket => {
-        // console.log('connection')
+
         socket.on('disconnect', () => {
             delete playersInLobby[socket.id]
             play.emit('playersInLobby', Object.values(playersInLobby))
@@ -26,17 +26,14 @@ module.exports = (play) => {
             }).sort({rating: -1})
                 .limit(10)
             playersInLobby[socket.id] = name
-            // console.log(playersInLobby)
-            play.emit('playersInLobby', Object.values(playersInLobby))
+            play.emit('playersInLobby', [...new Set(Object.values(playersInLobby))])
             const game = games.find(game => game[name])
             if (game && game.full) {
                 socket.emit('game connect', game.id)
                 } else {
                 if (game) game.creatorSocketId = socket.id
                 User.findOne({login: name}, (err, user) => {
-
                     if (err) console.log(err)
-
                     else socket.emit('rating', user.rating)
                 })
                 socket.emit('baseGames', games)
