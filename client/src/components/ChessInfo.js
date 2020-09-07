@@ -56,17 +56,17 @@ export const ChessInfo = ({game,name}) => {
         {window.innerWidth < 765 &&
         <div className=" d-flex justify-content-between bg-dark">
             <span className="d-inline-flex text-center  align-items-center ml-1 lead text-white">
-                {game.creator === name ? game.player : game.creator}({game[game.creator === name ? game.player : game.creator].rating})
+                {game.creator === name ? game.player : game.creator}<br/>({game[game.creator === name ? game.player : game.creator].rating})
             </span>
-            <span className="d-inline-flex lead text-white" style={{fontSize: '2rem'}}>
+            <span className="d-inline-flex lead text-white" style={{fontSize: '1.5rem'}}>
                 {showTime(game[name].color === 'white' ? blackTime : whiteTime)}
             </span>
 
-            <span className="d-inline-flex lead text-white" style={{fontSize: '2rem'}}>
+            <span className="d-inline-flex lead text-white" style={{fontSize: '1.5rem'}}>
                 {showTime(game[name].color === 'white' ? whiteTime : blackTime)}
             </span>
             <span className="d-inline-flex lead text-center align-items-center mr-1 text-white">
-                {name}({game[name].rating})
+                {name}<br/>({game[name].rating})
              </span>
         </div>
         }

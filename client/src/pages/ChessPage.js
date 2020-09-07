@@ -5,6 +5,7 @@ import {AuthContext} from "../context/AuthContext";
 import {drawBoard, drawMoves} from "../chess/board";
 // import {Time} from "../components/Time";
 import {ChessInfo} from "../components/ChessInfo";
+import {Loader} from "../components/Loader";
 // import {Loader} from "../components/Loader";
 
 
@@ -111,23 +112,22 @@ useEffect(()=> {
     },[chessSocket, history, name, id, size])
 
 
-    // if (!game) return <Loader/>
+    // if (!game) return
 
     return (
     <div className="row mt-5">
-
         <div className="col-xl-3">
         </div>
         <div className="col-auto">
-            <div id="cont">
+            <div id="cont" className={game ? 'visible' : 'invisible'}>
                 <canvas id="canvasChess" ref={canvas} onClick={click}/>
             </div>
+            {/*<div className={game && 'invisible'}><Loader/></div>*/}
         </div>
         <div className="col align-self-center">
             {game && <ChessInfo game={game} name={name}/>}
 
         </div>
-
     </div>
     )
 
