@@ -54,20 +54,25 @@ export const ChessInfo = ({game,name}) => {
         }
 
         {window.innerWidth < 765 &&
-        <div className=" d-flex justify-content-between bg-dark">
-            <span className="d-inline-flex text-center  align-items-center ml-1 lead text-white">
-                {game.creator === name ? game.player : game.creator}<br/>({game[game.creator === name ? game.player : game.creator].rating})
-            </span>
-            <span className="d-inline-flex lead text-white" style={{fontSize: '1.5rem'}}>
-                {showTime(game[name].color === 'white' ? blackTime : whiteTime)}
-            </span>
+        <div className="d-flex bg-dark">
+            <div className="d-inline w-50" >
+                <span className="d-block text-left mx-1 lead text-white" style={{fontSize: '2rem'}}>
+                    {showTime(game[name].color === 'white' ? blackTime : whiteTime)}
+                </span>
+                <span className="lead d-block text-left mx-1 text-white">
+                    {game.creator === name ? game.player : game.creator}({game[game.creator === name ? game.player : game.creator].rating})
+                </span>
 
-            <span className="d-inline-flex lead text-white" style={{fontSize: '1.5rem'}}>
-                {showTime(game[name].color === 'white' ? whiteTime : blackTime)}
-            </span>
-            <span className="d-inline-flex lead text-center align-items-center mr-1 text-white">
-                {name}<br/>({game[name].rating})
-             </span>
+            </div>
+            <div className="d-inline w-50" >
+                <span className="lead d-block text-right mx-1 text-white" style={{fontSize: '2rem'}}>
+                    {showTime(game[name].color === 'white' ? whiteTime : blackTime)}
+                </span>
+                <span className="lead d-block text-right mx-1 text-white">
+                    {name}({game[name].rating})
+                 </span>
+
+            </div>
         </div>
         }
         {window.innerWidth >= 765 &&
@@ -78,7 +83,7 @@ export const ChessInfo = ({game,name}) => {
             <span className="d-block display-4 p-2 bg-dark text-white">{showTime(game[name].color === 'white' ? blackTime : whiteTime)}</span>
             </>
         }
-        <div className="table-container" ref = {moves} style={{height: '100px'}}>
+        <div className="table-container" ref = {moves} style={{maxHeight: '100px', minHeight: '30px'}}>
             <table className="table table-sm mb-0">
                 <tbody>
                 {game.white.moves.map((move, i) => {

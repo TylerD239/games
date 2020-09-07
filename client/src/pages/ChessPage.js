@@ -115,7 +115,7 @@ useEffect(()=> {
     // if (!game) return
 
     return (
-    <div className="row mt-5">
+    <div className="row mt-3">
         <div className="col-xl-3">
         </div>
         <div className="col-auto">
