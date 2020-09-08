@@ -34,9 +34,10 @@ const availableMoves = (color,game) => {
                         .some(move => move.ate.piece === 'king'))
                 })
 
-            if (el.piece === 'king' && game[color].castling && !game[color].check) {
-                let shortCastling = true
-                let longCastling = true
+            if (el.piece === 'king'  && !game[color].check && (game[color].shortCastling || game[color].longCastling)) {
+                let shortCastling = game[color].shortCastling
+                let longCastling = game[color].longCastling
+
                 const line = color === 'white' ? 7 : 0
 
                 if (field[line][5] || field[line][6]) shortCastling = false

@@ -22,7 +22,7 @@ export const ChessInfo = ({game,name}) => {
 
     }
     useEffect(()=>{
-        console.log(window.innerWidth)
+        // console.log(window.innerWidth)
         setBlackTime(game.black.time)
         setWhiteTime(game.white.time)
         if (moves.current) moves.current.scrollTop = moves.current.scrollHeight

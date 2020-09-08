@@ -17,14 +17,16 @@ class Game {
         this.white = {
             time: this.timeFormat,
             eaten: [],
-            castling : true,
+            longCastling : true,
+            shortCastling : true,
             pieces : [],
             moves: []
         }
         this.black = {
             time: this.timeFormat,
             eaten: [],
-            castling : true,
+            longCastling : true,
+            shortCastling : true,
             pieces : [],
             moves: []
         }
@@ -58,17 +60,14 @@ class Game {
         const color2 = color === 'white' ? 'black' : 'white'
 
         if (this.moves.length) {
-            this[color].time -= Date.now() - this.lastTime
+            if (!move.pre) this[color].time -= Date.now() - this.lastTime
             this[color].time += this.addTime * 1000
         }
         this.lastTime = Date.now()
 
-
-        // console.log(move)
         if (move.piece.piece === 'pawn' && (move.to.y === 0 || move.to.y === 7)) {
             this[color].pieces.find(piece => piece.id === move.piece.id).piece = 'queen'
         }
-
 
         if (move.to.ate) {
             const eatenPiece = this.field[move.to.y][move.to.x]
@@ -79,27 +78,32 @@ class Game {
         this.field[move.to.y][move.to.x].position = {x:move.to.x, y:move.to.y}
         this.field[move.piece.position.y][move.piece.position.x] = 0
 
+        const line = color === 'white' ? 7 : 0
 
         if (move.to.castling) {
             if (move.to.x === 6) {
-                this.field[move.piece.position.y][5] = this.field[move.piece.position.y][7]
-                this.field[move.piece.position.y][5].position.x = 5
-                this.field[move.piece.position.y][7] = 0
-
+                this.field[line][5] = this.field[line][7]
+                this.field[line][5].position.x = 5
+                this.field[line][7] = 0
             }
             else if (move.to.x === 2) {
-                this.field[move.piece.position.y][3] = this.field[move.piece.position.y][0]
-                this.field[move.piece.position.y][3].position.x = 3
-                this.field[move.piece.position.y][0] = 0
+                this.field[line][3] = this.field[line][0]
+                this.field[line][3].position.x = 3
+                this.field[line][0] = 0
             }
-            this[color].castling = false
+        }
+        if (move.piece.piece === 'king') {
+            this[color].longCastling = false
+            this[color].shortCastling = false
+
         }
 
-        if (move.piece.piece === 'king' || move.piece.piece === 'rook' ) this[color].castling = false
+        if (move.piece.piece === 'rook' && move.piece.position.x === 7 && move.piece.position.y === line) this[color].shortCastling = false
+        if (move.piece.piece === 'rook' && move.piece.position.x === 1 && move.piece.position.y === line) this[color].shortCastling = false
+
         this.moves.push(move)
         this[color].moves.push(move)
         this.turn++
-
         this.availableMoves = availableMoves(this.turnColor, this)
 
     }

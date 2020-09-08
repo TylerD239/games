@@ -87,7 +87,7 @@ const drawBoard = (field, color, canvas, size, lastMove, check) => {
 
 }
 
-const drawMoves = (field, color, cell, moves, canvas, size) => {
+const drawMoves = (field, color, cell, moves, canvas, size, pre) => {
     const ctx = canvas.getContext('2d')
     ctx.lineWidth = 4
     ctx.strokeStyle = 'rgba(250,199,80,0.5)'
@@ -99,7 +99,8 @@ const drawMoves = (field, color, cell, moves, canvas, size) => {
 
     moves.forEach(move => {
         // ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.8)' : 'rgba(250,199,80,0.8)'
-        ctx.fillStyle = move.ate ? 'rgba(250,95,72,0.9)' : 'rgba(250,199,80,0.9)'
+
+        ctx.fillStyle = pre ? 'rgba(200,200,200,0.7)': move.ate ? 'rgba(250,95,72,0.9)' : 'rgba(250,199,80,0.9)'
 
         // const X = color === 'white' ? move.x * size : (7 - move.x) * size
         // const Y = color === 'white' ? move.y * size : (7 - move.y) * size
@@ -111,7 +112,23 @@ const drawMoves = (field, color, cell, moves, canvas, size) => {
         // ctx.strokeRect(X + 2, Y + 2,size - 4,size - 4)
     })
 }
+const drawPreMove = (piece, move, field, canvas, size) => {
+    const ctx = canvas.getContext('2d')
+    // ctx.lineWidth = 6
+    // ctx.strokeStyle = 'rgba(200,200,80,0.5)'
 
 
 
-export {drawBoard, drawMoves}
+    const fromX = piece.color === 'black' ? 7 - piece.position.x : piece.position.x
+    const fromY = piece.color === 'black' ? 7 - piece.position.y : piece.position.y
+    const toX = piece.color === 'black' ? 7 - move.x : move.x
+    const toY = piece.color === 'black' ? 7 - move.y : move.y
+    ctx.fillStyle = 'rgba(216,50,119,0.3)'
+    ctx.fillRect(fromX * size, fromY * size, size ,size)
+    ctx.drawImage(pieces[piece.color + '_' + piece.piece].image, fromX * size, fromY * size, size, size)
+    ctx.fillStyle = 'rgba(216,50,119,0.2)'
+    ctx.fillRect(toX * size, toY * size, size, size)
+}
+
+
+export {drawBoard, drawMoves, drawPreMove}
