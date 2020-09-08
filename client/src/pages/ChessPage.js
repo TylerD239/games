@@ -7,6 +7,8 @@ import {drawBoard, drawMoves, drawPreMove} from "../chess/board";
 import {ChessInfo} from "../components/ChessInfo";
 // import {Loader} from "../components/Loader";
 import {availablePreMoves} from "../chess/availablePreMoves";
+import {GameChat} from "../components/GameChat";
+import {Loader} from "../components/Loader";
 // import {Loader} from "../components/Loader";
 
 
@@ -162,18 +164,24 @@ useEffect(()=> {
 
     return (
     <div className="row mt-3">
-        <div className="col-xl-3">
-        </div>
+
         <div className="col-auto">
             <div id="cont" className={game ? 'visible' : 'invisible'}>
                 <canvas id="canvasChess" ref={canvas} onClick={click}/>
             </div>
             {/*<div className={game && 'invisible'}><Loader/></div>*/}
         </div>
-        <div className="col align-self-center">
+        <div className="col align-self-center mb-3">
             {game && <ChessInfo game={game} name={name}/>}
 
         </div>
+        {game ?
+            <div className="col-xl-3 order-lg-first">
+                <GameChat id={game._id}/>
+            </div>
+            :
+            <Loader/>
+        }
     </div>
     )
 

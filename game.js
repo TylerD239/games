@@ -3,11 +3,11 @@ const availableMoves = require('./moves')
 
 class Game {
     constructor(name, rating, creatorSocketId, type, settings) {
-        this.started = false
+        this.messages = []
         this.colorFormat = settings.color
         this[name] = {rating}
         this.timeFormat = settings.min * 60000
-        this.addTime = settings.sec
+        this.addTime = settings.sec * 1000
         this.type = type
         this.creator = name
         this.time = Date.now()
@@ -61,7 +61,7 @@ class Game {
 
         if (this.moves.length) {
             if (!move.pre) this[color].time -= Date.now() - this.lastTime
-            this[color].time += this.addTime * 1000
+            this[color].time += this.addTime
         }
         this.lastTime = Date.now()
 

@@ -3,18 +3,15 @@ import React, {useContext} from "react"
 // import {IoContext} from "../context/IoContext";
 import {AuthContext} from "../context/AuthContext"
 import {IoContext} from "../context/IoContext";
+import white_king from '../pieces/white_king.svg'
+import black_king from '../pieces/black_king.svg'
 
-export const Game = ({game, socket, rating, setCreatedGame}) => {
+export const Game = ({game, rating, setCreatedGame}) => {
 
-    // console.log(game, typeof game._id)
-
-    // const {playSocket} = useContext(IoContext)
-    // const history = useHistory()
     const {name} = useContext(AuthContext)
     const {chessSocket} = useContext(IoContext)
     const joinGame = () => {
         chessSocket.emit('join game', game._id, name, rating)
-        // history.push(`cross/${game._id}`)
     }
 
     const deleteGame = () => {
@@ -23,13 +20,34 @@ export const Game = ({game, socket, rating, setCreatedGame}) => {
     }
 
     return(
-        <div className="card text-center mb-2">
+        <div className="card text-center mt-3">
             <div className="card-header">
-                <strong>{game.creator}({game[game.creator].rating})</strong>
+                <span className="lead">{game.creator} </span><span className="lead">({game[game.creator].rating}) </span>
+
             </div>
             <div className="card-body">
-                <h5 className="card-title">Game #{game._id}</h5>
-                {name !== game.creator && <button className="btn btn-outline-success" onClick={joinGame}>Присоединиться</button>}
+                <span className="d-block card-title text-secondary">#{game._id}</span>
+                {game.colorFormat === 'random' ?
+                    <span className="d-block h4">
+                        <img height="40px" width="40px" alt="" src={white_king}/>/<img  height="40px" width="40px" alt="" src={black_king}/>
+                    </span>
+                    :
+                    <img
+                        src={
+                            game.colorFormat === 'white'
+                            ?
+                            white_king
+                            :
+                            black_king}
+                        alt={game.colorFormat}
+                        height="50px"
+                        width="50px"
+                    />}
+                    <span className="d-block h5 font-weight-bold">
+                        {game.timeFormat / 60000} + {game.addTime / 1000}
+                    </span>
+
+                {name !== game.creator && rating && <button className="btn btn-outline-success" onClick={joinGame}>Присоединиться</button>}
                 {name === game.creator && <button className="btn btn-outline-success" onClick={deleteGame}>Отменить</button>}
             </div>
             <div className="card-footer text-muted">

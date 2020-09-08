@@ -41,38 +41,39 @@ export const PlayPage = ({type}) => {
 
     return (
         <div className="container-fluid">
-            <div className="row mt-3">
+            <div className="row">
                 <div className="col-lg-3">
-                    <ul className="list-group">
+                    <ul className="list-group mt-3">
                         <li className="list-group-item list-group-item-action  bg-dark text-light">Игроки онлайн</li>
                         {players.map(player => <li key={player} className="list-group-item">{player}</li>)}
                     </ul>
-                    <ul className="list-group mt-5">
+                    <ul className="list-group mt-3">
                         <li className="list-group-item list-group-item-action bg-dark text-light">Текущие партии</li>
                         {!games.some(game =>game.full) && <li className="list-group-item">В данный момент никто не играет</li>}
-                        {games.map(game => game.full && <button key={game._id} className="list-group-item list-group-item-action">{game.creator} vs {game.player}</button>)}
+                        {games.map(game => game.full && <button
+                            key={game._id}
+                            className="list-group-item list-group-item-action"
+                        >{game.creator} vs {game.player}
+                        </button>)}
                     </ul>
                 </div>
-                <div className="col-lg-6 order-first order-lg-0">
 
+                <div className="col-lg-6 order-first order-lg-0">
                     {!createdGame &&
                         <>
                             <button
-                            className="btn btn-outline-success bg-dark btn-block btn-lg mb-3"
+                            className="btn btn-outline-success bg-dark btn-block btn-lg mt-3"
                             type="button" data-toggle="collapse"
                             data-target="#collapseExample"
                             aria-expanded="false"
                             aria-controls="collapseExample">
                             Новая игра
                         </button>
-                            <div className="collapse mb-3" id="collapseExample">
+                            <div className="collapse mt-3" id="collapseExample">
                                 <GameSettings setCreatedGame = {setCreatedGame} rating = {rating}/>
                             </div>
                         </>
                     }
-                    {/*<button type="button" onClick={createGame} className="btn btn-outline-success bg-dark btn-block btn-lg" >Создать игру</button>*/}
-                    {/*<button type="button" onClick={() => setSettings(prev => !prev)} className="btn btn-outline-success bg-dark btn-block btn-lg">Новая игра</button>*/}
-                    {/*{settings && <GameSettings />}*/}
                     <div>
                         {games.map(game => {
                             return(
@@ -83,14 +84,14 @@ export const PlayPage = ({type}) => {
                     </div>
                 </div>
                 <div className="col-lg-3">
-                    <button type="button" className="btn btn-dark btn-lg btn-block" onClick={()=>{history.push('/info')}}>
+                    <button type="button" className="btn btn-dark btn-lg btn-block mt-3" onClick={()=>{history.push('/info')}}>
                         <span className="font-weight-bold">{name}</span><span className="font-weight-light">({rating || '...'})</span>
                     </button>
                     {leaders.length === 0
                         ?
                         <Loader />
                         :
-                    <table className="table table-hover mt-5">
+                    <table className="table table-hover mt-3">
                         <thead className="thead-dark">
                             <tr>
                                 <th scope="col">#</th>

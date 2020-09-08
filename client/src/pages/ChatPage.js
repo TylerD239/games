@@ -55,8 +55,7 @@ export const ChatPage = () => {
     return (
         <div className="container">
             <div className="input-group mb-3 mt-3">
-                <input type="text" value={text} onChange={textHandle} className="form-control" placeholder="Введите сообщение"
-                       />
+                <input type="text" value={text} onChange={textHandle} className="form-control" placeholder="Введите сообщение"/>
                     <div className="input-group-append">
                         <button onClick={sendMessage} className="btn btn-outline-secondary" type="button" id="button-addon2">Отправить</button>
                     </div>

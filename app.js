@@ -16,7 +16,6 @@ const playCross = io.of('/playCross')
 const playChess = io.of('/playChess')
 const chat = io.of('/chat')
 
-require('./socket.io/playCross')(playCross)
 require('./socket.io/playChess')(playChess)
 require('./socket.io/chat')(chat)
 

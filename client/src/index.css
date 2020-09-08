@@ -57,17 +57,24 @@ code {
   /*float:left;*/
   outline: 1px solid rgb(130,130,130);
 }
-#canvasChess {
-  position: relative;
-  /*width: 800px;*/
-  /*height: 800px;*/
-}
+/*#canvasChess {*/
+/*  position: relative;*/
+/*  !*width: 800px;*!*/
+/*  !*height: 800px;*!*/
+/*}*/
 .table-container {
   /*height: 200px;*/
   overflow-y: scroll;
 
 }
 .table-container::-webkit-scrollbar {
+  width: 0px;
+}
+
+#chatContainer {
+  overflow-y: scroll;
+}
+#chatContainer::-webkit-scrollbar {
   width: 0px;
 }
 /*#exit{*/
