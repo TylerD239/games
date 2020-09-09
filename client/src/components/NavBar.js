@@ -8,7 +8,9 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
     return (
 
         <nav className="navbar navbar-dark navbar-expand-sm bg-dark">
-            <span className="navbar-brand">CHESS v1.03</span>
+            <NavLink to="playChess">
+                <span className="navbar-brand">CHESS v1.03</span>
+            </NavLink>
             <button className="navbar-toggler"
                     type="button"
                     data-toggle="collapse"

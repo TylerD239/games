@@ -70,14 +70,14 @@ module.exports = (play) => {
         })
 
         socket.on('connected to game', (id, name) => {
-
+            console.log(id,name)
             const game = games.find(game => game.id === id)
             if (!game) socket.emit('go away')
             else if (game.creator !== name && game.player !== name) socket.emit('go away')
             else {
 
                 socket.join(id)
-                socket.emit('game', {...game, turnColor: game.turnColor})
+                socket.emit('game', {...game, turnColor: game.turnColor}, true)
             }
 
         })

@@ -39,9 +39,13 @@ const drawBoard = (field, color, canvas, size, lastMove, check) => {
     const ctx = canvas.getContext('2d')
 
 
-    ctx.fillStyle = 'rgb(130,130,130)'
+    // ctx.fillStyle = 'rgb(130,130,130)'
+
+    ctx.fillStyle = '#C6D5E6'
     ctx.fillRect(0, 0, 8 * size, 8 * size)
-    ctx.fillStyle = 'rgb(240,240,240)'
+    ctx.fillStyle = '#7784A1'
+
+    // ctx.fillStyle = 'rgb(240,240,240)'
     //
     // ctx.fillStyle = '#D7A887'
     // ctx.fillRect(0, 0, 800, 800)

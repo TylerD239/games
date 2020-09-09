@@ -55,7 +55,7 @@ code {
   font-size:0;
   margin-bottom: 6px;
   /*float:left;*/
-  outline: 1px solid rgb(130,130,130);
+  outline: 1px solid #4A6896;
 }
 /*#canvasChess {*/
 /*  position: relative;*/
@@ -63,7 +63,7 @@ code {
 /*  !*height: 800px;*!*/
 /*}*/
 .table-container {
-  /*height: 200px;*/
+
   overflow-y: scroll;
 
 }
@@ -77,36 +77,6 @@ code {
 #chatContainer::-webkit-scrollbar {
   width: 0px;
 }
-/*#exit{*/
-/*  !*color: #343a40!important;*!*/
-/*  !*background-color: #848484!important;*!*/
-/*  border: none!important;*/
-/*}*/
-/*#giveUp{*/
-/*  !*color: #343a40!important;*!*/
-/*  !*background-color: #848484!important;*!*/
-/*  border: none!important;*/
-/*}*/
-
-/*.chessInfo {*/
-/*  width: 300px;*/
-/*  height: 200px;*/
-/*  border: 1px solid #848484;*/
-/*}*/
-
-/*.navbar {*/
-/*  !*border-bottom: 1px dashed #28a745;*!*/
-/*  !*background: linear-gradient(rgb(156,100,100), rgb(256,200,200));*!*/
-/*}*/
-
-/*.custom-range::-webkit-slider-thumb {*/
-/*  background: black!important;*/
-/*}*/
-
-/*.custom-range::-moz-range-thumb {*/
-/*  background: black!important;*/
-/*}*/
-
-/*.custom-range::-ms-thumb {*/
-/*  background: black!important;*/
-/*}*/
+.message {
+  line-height: 1!important;
+}

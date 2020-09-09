@@ -70,7 +70,8 @@ class Game {
         }
 
         if (move.to.ate) {
-            const eatenPiece = this.field[move.to.y][move.to.x]
+            const eatenPiece = move.to.ate
+            if (move.to.enPassant) this.field[move.to.ate.position.y][move.to.ate.position.x] = 0
             this[color].eaten.push(eatenPiece)
             this[color2].pieces.splice(this[color2].pieces.findIndex(piece => piece === eatenPiece), 1)
         }
@@ -108,6 +109,7 @@ class Game {
 
     }
     connect(name, rating) {
+        this.player = name
         if (this.colorFormat === 'random') {
             if ( Math.random() > 0.5) {
                 this[this.creator].color = 'white'
@@ -138,7 +140,7 @@ class Game {
         }
         // this.lastTime = Date.now()
         this.full = true
-        this.player = name
+
         this.turn = 1
 
 

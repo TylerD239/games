@@ -8,9 +8,16 @@ import {ChessInfo} from "../components/ChessInfo";
 // import {Loader} from "../components/Loader";
 import {availablePreMoves} from "../chess/availablePreMoves";
 import {GameChat} from "../components/GameChat";
-import {Loader} from "../components/Loader";
 // import {Loader} from "../components/Loader";
+import my_move_sound from "../sounds/self.mp3"
+import eat_sound from "../sounds/eat.mp3"
+import enemy_move_sound from "../sounds/enemy.mp3"
 
+
+const myMoveSound = new Audio(my_move_sound)
+const eatSound = new Audio(eat_sound)
+eatSound.volume = 0.8
+const enemyMoveSound = new Audio(enemy_move_sound)
 
 
 export const ChessPage = () => {
@@ -28,7 +35,6 @@ export const ChessPage = () => {
         preMoves: null,
         preMove: null
     })
-
     const [size, setSize] = useState(100)
     const [game, setGame] = useState(null)
     const {name} = useContext(AuthContext)
@@ -80,7 +86,7 @@ export const ChessPage = () => {
                 if (preMove) {
                     ref.current.preMove = {id: ref.current.raisedPiece.id, move: preMove}
                     drawPreMove(ref.current.raisedPiece, preMove,game.field, canvas.current, size)
-                }
+                } else ref.current.raisedPiece = null
                 ref.current.preMoves = null
             } else {
                 const move = ref.current.pieceMoves.find(move => move.y === cell.y && move.x === cell.x)
@@ -98,25 +104,26 @@ export const ChessPage = () => {
         ref.current.raised = !ref.current.raised
     }
 
-useEffect(()=> {
+    useEffect(()=> {
 
-    if (canvas.current) {
-        const less = Math.min(window.innerHeight - 100, window.innerWidth)
-        // console.log(less)
-        const s = less > 800 ? 100 : Math.floor(Math.floor(less / 8) / 10) * 10
-        setSize(s)
+        if (canvas.current) {
+            const less = Math.min(window.innerHeight - 100, window.innerWidth)
+            // console.log(less)
+            const s = less > 800 ? 100 : Math.floor(Math.floor(less / 8) / 10) * 10
+            setSize(s)
 
-        canvas.current.width = s * 8
-        canvas.current.height = s * 8
-        canvas.current.style.height = s * 8 + 'px'
-        canvas.current.style.width = s * 8 + 'px'
-    }
-},[])
+            canvas.current.width = s * 8
+            canvas.current.height = s * 8
+            canvas.current.style.height = s * 8 + 'px'
+            canvas.current.style.width = s * 8 + 'px'
+        }
+    },[])
+
+    useEffect(() => {
+        chessSocket.emit('connected to game', id, name)
+    }, [chessSocket, id, name])
 
     useEffect( () => {
-
-        chessSocket.emit('connected to game', id, name)
-
         chessSocket.on('endGame', game => {
             setGame(game)
             drawBoard(game.field, game[name].color, canvas.current,size, game.moves[game.moves.length - 1], game.check)
@@ -124,31 +131,50 @@ useEffect(()=> {
 
         })
 
-        chessSocket.on('game', game => {
-            console.log(game)
+        chessSocket.on('game', (game, connect) => {
+            console.log(game, connect)
             if (!game) history.push('/playChess')
+
+
+            if (!connect) {
+                    const lastMove = game.moves[game.moves.length - 1]
+                    if (lastMove.to.ate) eatSound.play().catch(e => console.info('Sorry for the quiet move'))
+                    else if (game[name].color === lastMove.piece.color) myMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
+                    else enemyMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
+            }
+
+
             ref.current.moved = false
             setGame(game)
-            drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
-            if (ref.current.raisedPiece) {
-                const piece = ref.current.raisedPiece
-                const moves = game.availableMoves[piece.id] || []
-                ref.current.pieceMoves = moves
-                drawMoves(game.field, game[name].color, {y: piece.position.y, x: piece.position.x}, moves, canvas.current, size)
-            }
+
+
             if (ref.current.preMove) {
-                const preMove = ref.current.preMove.move
-                const moves = game.availableMoves[ref.current.preMove.id]
-                const move = moves.find(move => move.x === preMove.x && move.y === preMove.y)
-                // console.log(preMove, moves)
-                if (move) {
-                    ref.current.moved = true
-                    chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move, pre: true}, id, name)
-                } else {
-                    drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
-                }
+                if (game.availableMoves[ref.current.preMove.id]) {
+                    const preMove = ref.current.preMove.move
+                    const move = game.availableMoves[ref.current.preMove.id].find(move => move.x === preMove.x && move.y === preMove.y)
+                    // console.log(preMove, moves)
+                    if (move) {
+                        ref.current.moved = true
+                        chessSocket.emit('move', {piece: ref.current.raisedPiece, to: move, pre: true}, id, name)
+                    } else {
+                        drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
+                    }
+                } else drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
                 ref.current.preMove = null
                 ref.current.raisedPiece = null
+            } else {
+
+
+                drawBoard(game.field, game[name].color, canvas.current, size, game.moves[game.moves.length - 1], game.check)
+                if (ref.current.raisedPiece) {
+                    const piece = ref.current.raisedPiece
+                    const moves = game.availableMoves[piece.id] || []
+                    ref.current.pieceMoves = moves
+                    drawMoves(game.field, game[name].color, {
+                        y: piece.position.y,
+                        x: piece.position.x
+                    }, moves, canvas.current, size)
+                }
             }
         })
         //
@@ -172,15 +198,15 @@ useEffect(()=> {
             {/*<div className={game && 'invisible'}><Loader/></div>*/}
         </div>
         <div className="col align-self-center mb-3">
-            {game && <ChessInfo game={game} name={name}/>}
+            {game && <ChessInfo game={game} name={name} />}
 
         </div>
-        {game ?
-            <div className="col-xl-3 order-lg-first">
-                <GameChat id={game._id}/>
+        {game &&
+            <div className="col-xl-3 order-xl-first">
+                <GameChat id={game.winner ? null : game._id} size={size}/>
             </div>
-            :
-            <Loader/>
+            // :
+            // <Loader/>
         }
     </div>
     )

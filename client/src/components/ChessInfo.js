@@ -46,7 +46,7 @@ export const ChessInfo = ({game,name}) => {
         game ?
     <div className="chessInfo">
         {game.winner &&
-            <span className="d-block display-4 lead bg-secondary text-white">
+            <span className="d-block p-1 lead bg-secondary text-white">
                 {game.winner === 'draw' ? 'Ничья' :
                     game.winner === 'cancel' ? 'Игра отменена' :
                     `Победа: ${game.winner}`}

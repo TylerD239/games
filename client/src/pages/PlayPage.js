@@ -85,7 +85,9 @@ export const PlayPage = ({type}) => {
                 </div>
                 <div className="col-lg-3">
                     <button type="button" className="btn btn-dark btn-lg btn-block mt-3" onClick={()=>{history.push('/info')}}>
-                        <span className="font-weight-bold">{name}</span><span className="font-weight-light">({rating || '...'})</span>
+                        <span className="font-weight-bold">{name}</span>
+                        <span className="font-weight-light">({rating || <span className="spinner-grow spinner-grow-sm text-warning" role="status" aria-hidden="true"/>})
+                    </span>
                     </button>
                     {leaders.length === 0
                         ?
