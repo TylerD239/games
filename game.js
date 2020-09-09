@@ -73,7 +73,8 @@ class Game {
             const eatenPiece = move.to.ate
             if (move.to.enPassant) this.field[move.to.ate.position.y][move.to.ate.position.x] = 0
             this[color].eaten.push(eatenPiece)
-            this[color2].pieces.splice(this[color2].pieces.findIndex(piece => piece === eatenPiece), 1)
+            // this[color2].pieces.splice(this[color2].pieces.findIndex(piece => piece.id === eatenPiece.id), 1)
+            this[color2].pieces = this[color2].pieces.filter(piece => piece.id !== eatenPiece.id)
         }
         this.field[move.to.y][move.to.x] = this.field[move.piece.position.y][move.piece.position.x]
         this.field[move.to.y][move.to.x].position = {x:move.to.x, y:move.to.y}

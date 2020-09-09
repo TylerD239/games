@@ -16,7 +16,7 @@ export const GameChat = ({id, size})=> {
 
     const textHandle = (e) => setText(e.target.value)
     const send = useCallback(evt => {
-        console.log(evt)
+
         if (!text) return false
         if (!evt.keyCode || evt.keyCode === 13) {
             chessSocket.emit('message', text, name, id)
