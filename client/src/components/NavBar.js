@@ -9,7 +9,7 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
 
         <nav className="navbar navbar-dark navbar-expand-sm bg-dark">
             <NavLink to="playChess">
-                <span className="navbar-brand">CHESS v1.03</span>
+                <span className="navbar-brand">CHESS v1.10</span>
             </NavLink>
             <button className="navbar-toggler"
                     type="button"
@@ -26,26 +26,14 @@ const {logout, isAuthenticated, setPage} = useContext(AuthContext)
                     {isAuthenticated ?
                     <>
                         <ul className="navbar-nav mr-auto">
-
-                            {/*<li className="nav-item dropdown">*/}
-                            {/*    <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button"*/}
-                            {/*       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
-                            {/*        Play*/}
-                            {/*    </span>*/}
-                            {/*    <div className="dropdown-menu" aria-labelledby="navbarDropdown">*/}
-                            {/*        <NavLink className="dropdown-item" to="/playChess">chess</NavLink>*/}
-                            {/*        <NavLink className="dropdown-item" to="/playCross">cross</NavLink>*/}
-                            {/*    </div>*/}
-                            {/*</li>*/}
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/playChess">Play</NavLink>
+                                <NavLink className="nav-link" to="/playChess">Играть</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/chat">Chat</NavLink>
+                                <NavLink className="nav-link" to="/chat">Чат</NavLink>
                             </li>
-
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/info">Profile</NavLink>
+                                <NavLink className="nav-link" to="/info">Мои игры</NavLink>
                             </li>
 
                         </ul>

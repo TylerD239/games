@@ -8,13 +8,12 @@ import {Loader} from "../components/Loader";
 // import {PlayersInLobby} from "../components/PlayersInLobby";
 
 
-export const PlayPage = ({type}) => {
+export const PlayPage = () => {
 
 
     const {chessSocket} = useContext(IoContext)
     const {name} = useContext(AuthContext)
     const [games, setGames] = useState([])
-    const [createdGame, setCreatedGame] = useState(false)
     const [leaders, setLeaders] = useState([])
     const [rating, setRating] = useState(null)
     const [players,  setPlayers] = useState([])
@@ -27,14 +26,14 @@ export const PlayPage = ({type}) => {
         chessSocket.on('baseGames', bGames => setGames(bGames))
         chessSocket.on('leaders', leaders => setLeaders(leaders))
         chessSocket.on('rating', rate => setRating(rate))
-        chessSocket.on('game connect', id => history.push(`${type}/${id}`))
+        chessSocket.on('game connect', id => history.push(`chess/${id}`))
 
         return () => chessSocket.removeAllListeners()
-    },[history, name, chessSocket, type])
+    },[history, name, chessSocket])
 
-    useEffect(()=> {
-        if (games.some(game => game.creator === name && !game.full)) setCreatedGame(true)
-    },[games,name])
+    // useEffect(()=> {
+    //     if (games.some(game => game.creator === name && !game.full)) setCreatedGame(true)
+    // },[games, name])
 
 
 
@@ -48,19 +47,24 @@ export const PlayPage = ({type}) => {
                         {players.map(player => <li key={player} className="list-group-item">{player}</li>)}
                     </ul>
                     <ul className="list-group mt-3">
-                        <li className="list-group-item list-group-item-action bg-dark text-light">Текущие партии</li>
+                        <li className=" list-group-item list-group-item-action bg-dark text-light">Текущие партии</li>
                         {!games.some(game =>game.full) && <li className="list-group-item">В данный момент никто не играет</li>}
                         {games.map(game => game.full && <button
                             key={game._id}
-                            className="list-group-item list-group-item-action"
-                        >{game.creator} vs {game.player}
+                            className="btn list-group-item"
+                            onClick={()=>{
+                                game[name] ? history.push(`chess/${game._id}`) : history.push(`spectateChess/${game._id}`)
+                            }}
+                        >
+                            <span>{game.creator} vs {game.player}   </span>
+                            <span className="align-self-center badge badge-success">
+                                {game[name] ? 'Вернуться' : 'Смотреть'}
+                            </span>
                         </button>)}
                     </ul>
                 </div>
 
                 <div className="col-lg-6 order-first order-lg-0">
-                    {!createdGame &&
-                        <>
                             <button
                             className="btn btn-outline-success bg-dark btn-block btn-lg mt-3"
                             type="button" data-toggle="collapse"
@@ -70,14 +74,18 @@ export const PlayPage = ({type}) => {
                             Новая игра
                         </button>
                             <div className="collapse mt-3" id="collapseExample">
-                                <GameSettings setCreatedGame = {setCreatedGame} rating = {rating}/>
+                                <GameSettings  rating = {rating}/>
                             </div>
-                        </>
-                    }
+
                     <div>
                         {games.map(game => {
                             return(
-                                !game.full && <Game key={game._id} game = {game} rating={rating} setCreatedGame = {setCreatedGame}/>
+                                !game.full &&
+                                <Game
+                                    key={game._id}
+                                    game = {game}
+                                    rating={rating}
+                                />
                             )
                         })
                         }

@@ -12,7 +12,6 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 
-const playCross = io.of('/playCross')
 const playChess = io.of('/playChess')
 const chat = io.of('/chat')
 

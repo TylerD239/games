@@ -27,7 +27,6 @@ export const ChessPage = () => {
     const canvas = useRef(null)
     const ref = useRef({
         moved: false,
-        gameId: id,
         raised: false,
         // from: {},
         raisedPiece: null,
@@ -127,14 +126,13 @@ export const ChessPage = () => {
         chessSocket.on('endGame', game => {
             setGame(game)
             drawBoard(game.field, game[name].color, canvas.current,size, game.moves[game.moves.length - 1], game.check)
-            // drawBoard(game, canvas.current,size)
 
         })
 
         chessSocket.on('game', (game, connect) => {
-            console.log(game, connect)
-            if (!game) history.push('/playChess')
 
+            if (!game) history.push('/playChess')
+            if (game._id !== id) return false
 
             if (!connect) {
                     const lastMove = game.moves[game.moves.length - 1]

@@ -1,8 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState} from "react"
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react"
 import {AuthContext} from "../context/AuthContext";
 import {Loader} from "../components/Loader";
 import {IoContext} from "../context/IoContext";
 
+const dateConstructor = time => {
+    const date = new Date(time)
+    const h = date.getHours().toString().padStart(2,'0')
+    const m = date.getMinutes().toString().padStart(2,'0')
+    const s = date.getSeconds().toString().padStart(2,'0')
+    return h + ':' + m + ':' + s
+}
 
 export const ChatPage = () => {
 
@@ -10,28 +17,20 @@ export const ChatPage = () => {
     const [messages, setMessages] = useState([])
     const [text, setText] = useState('')
     const {name} = useContext(AuthContext)
-
-
-    const textHandle = (e) => {if (text.length < 75) setText(e.target.value) }
-
+    const chatContainer = useRef(null)
+    const textHandle = evt => setText(evt.target.value)
 
     const sendMessage = useCallback(() => {
-
-        if (text) {
+        if (!text) return false
             chatSocket.emit('send mess', {author: name, text: text, date: Date.now()})
             setText('')
-        }
     },[chatSocket, name, text])
 
-    const send = useCallback((evt) => {
-        if (evt.keyCode === 13) sendMessage()
-    }, [sendMessage])
+
 
     useEffect( () => {
-
-        window.addEventListener('keydown', send)
-
-
+        const keyPush = (evt) => {if (evt.keyCode === 13) sendMessage()}
+        window.addEventListener('keydown', keyPush)
         chatSocket.emit('ready')
         chatSocket.on('baseMessages', (bMessages) => {
             setMessages(bMessages)
@@ -40,16 +39,22 @@ export const ChatPage = () => {
             setMessages((prevMessages) => [...prevMessages, message])
         })
         return () => {
-            window.removeEventListener('keydown', send)
+            window.removeEventListener('keydown', keyPush)
             chatSocket.removeAllListeners()
         }
-    },[chatSocket, send])
+    },[chatSocket, sendMessage])
 
+    useEffect(()=> {
+        // chatContainer.current.style.maxHeight = window.innerHeight - 200 + 'px'
+        console.log(chatContainer.current)
 
+            chatContainer.current.style.height = window.innerHeight - 200 + 'px'
+
+    },[])
 
     useEffect(()=>{
-        const scroll = document.getElementById("scroll")
-        scroll.scrollTop = scroll.scrollHeight
+            chatContainer.current.scrollTop = chatContainer.current.scrollHeight
+
     },[messages])
 
     return (
@@ -61,24 +66,21 @@ export const ChatPage = () => {
                     </div>
             </div>
             <hr/>
-            {!messages.length && <Loader />}
-
-            <div id="scroll" style={{maxHeight: "450px", overflowY: "auto"}}>
-                {messages.map((message, i) => {
-                    const color = i % 2 === 0 ? 'dark' : 'secondary'
-                    const time = new Date(message.date)
-                    const h = time.getHours().toString().padStart(2,'0')
-                    const m = time.getMinutes().toString().padStart(2,'0')
-                    const s = time.getSeconds().toString().padStart(2,'0')
-                    return (
-                        <div key={message.date} className= {`alert alert-${color}`} role="alert">
-                            <span>{h}:{m}:{s} </span>
-                            <strong>{message.author}: </strong>
-                            {message.text}
-                        </div>
+                <div ref={chatContainer} className="chatContainer ">
+                    {messages.length ?
+                        messages.map((message, i) => (
+                            <div className='card mb-2 border-info' key={i}>
+                                <div className="card-body message p-2">
+                                        <span>{dateConstructor(message.date)} </span>
+                                        <strong>{message.author}: </strong>
+                                        {message.text}
+                                </div>
+                            </div>
+                        )
                     )
-                })}
-            </div>
+                    :
+                    <Loader />}
+                </div>
 
         </div>
     )

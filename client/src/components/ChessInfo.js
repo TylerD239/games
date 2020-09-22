@@ -4,7 +4,7 @@ import {useHistory} from "react-router-dom";
 import {Loader} from "./Loader";
 
 
-export const ChessInfo = ({game,name}) => {
+export const ChessInfo = ({game,name, spectate}) => {
 
     const [whiteTime, setWhiteTime] = useState(0)
     const [blackTime, setBlackTime] = useState(0)
@@ -13,8 +13,11 @@ export const ChessInfo = ({game,name}) => {
     const cancel = () => chessSocket.emit('cancel', game._id)
     const exit = () => history.push('/playChess')
     const giveUp = () => chessSocket.emit('giveUp', name, game._id)
-    const moves = useRef(null)
+    // const exitSpectate =  useCallback(() => {
+    //     history.push('/playChess')
+    // },[chessSocket,history, game._id])
 
+    const moves = useRef(null)
     const showTime = (time) => {
         const min = Math.floor(time/60000)
         const sec = Math.floor((time - min * 60000) / 1000)
@@ -22,7 +25,6 @@ export const ChessInfo = ({game,name}) => {
 
     }
     useEffect(()=>{
-        // console.log(window.innerWidth)
         setBlackTime(game.black.time)
         setWhiteTime(game.white.time)
         if (moves.current) moves.current.scrollTop = moves.current.scrollHeight
@@ -35,12 +37,11 @@ export const ChessInfo = ({game,name}) => {
             return () => clearInterval(timer)
 
         }
-
-        // if (moves) moves.scrollTop = moves.scrollHeight
-
-
     },[game])
-
+    //
+    useEffect(()=>{
+        return () => chessSocket.emit('leave room', game._id)
+        },[chessSocket, game._id])
 
     return (
         game ?
@@ -121,14 +122,13 @@ export const ChessInfo = ({game,name}) => {
             </span>
             </>
         }
-        {game.moves.length === 0 && !game.winner?
-            <button id='exit' onClick={cancel} className="btn btn-outline-secondary rounded-0">Отменить игру</button>
+        {spectate || game.winner ?
+            <button onClick={exit} className="btn btn-outline-secondary rounded-0">выйти</button>
             :
-            game.winner
-            ?
-            <button id='exit' onClick={exit} className="btn btn-outline-secondary rounded-0">выйти</button>
+            game.moves.length === 0 && !game.winner ?
+            <button onClick={cancel} className="btn btn-outline-secondary rounded-0">Отменить игру</button>
             :
-            <button id='giveUp' type="button" onClick={giveUp} className="btn btn-outline-secondary rounded-0">сдаться</button>
+            <button type="button" onClick={giveUp} className="btn btn-outline-secondary rounded-0">сдаться</button>
         }
 
     </div>

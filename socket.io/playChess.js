@@ -9,8 +9,6 @@ const loseTimers = {}
 const playersInLobby = {}
 
 module.exports = (play) => {
-
-
     play.on('connection', socket => {
 
         socket.on('disconnect', () => {
@@ -20,25 +18,24 @@ module.exports = (play) => {
         })
 
         socket.on('ready', name => {
+            playersInLobby[socket.id] = name
             User.find({}, (err, users)=>{
                 if (err) console.log(err)
                 socket.emit('leaders', users.map(user => ({name:user.login, rating:user.rating})))
             }).sort({rating: -1})
                 .limit(10)
-            playersInLobby[socket.id] = name
-            play.emit('playersInLobby', [...new Set(Object.values(playersInLobby))])
-            const game = games.find(game => game[name])
-            if (game && game.full) {
-                socket.emit('game connect', game.id)
-                } else {
-                if (game) game.creatorSocketId = socket.id
-                User.findOne({login: name}, (err, user) => {
-                    if (err) console.log(err)
-                    else socket.emit('rating', user.rating)
-                })
-                socket.emit('baseGames', games)
 
-            }
+            play.emit('playersInLobby', [...new Set(Object.values(playersInLobby))])
+            const game = games.find(game => game.creator === name)
+
+            if (game && !game.full) game.creatorSocketId = socket.id
+            User.findOne({login: name}, (err, user) => {
+                if (err) console.log(err)
+                else socket.emit('rating', user.rating)
+            })
+            socket.emit('baseGames', games)
+
+
 
         })
 
@@ -61,8 +58,8 @@ module.exports = (play) => {
         socket.on('join game', (id, name, rating) => {
             const game = games.find(game => game.id === id)
             if (!game || game.full) return false
-            const selfGame = games.find(game => game.creator === name)
-            if (selfGame) games.splice(games.indexOf(selfGame), 1)
+            // const selfGame = games.find(game => game.creator === name)
+            // if (selfGame) games.splice(games.indexOf(selfGame), 1)
             game.connect(name, rating)
             socket.emit('game connect', id)
             play.to(game.creatorSocketId).emit('game connect', id)
@@ -70,7 +67,7 @@ module.exports = (play) => {
         })
 
         socket.on('connected to game', (id, name) => {
-            console.log(id,name)
+            // console.log(id,name)
             const game = games.find(game => game.id === id)
             if (!game) socket.emit('go away')
             else if (game.creator !== name && game.player !== name) socket.emit('go away')
@@ -132,6 +129,15 @@ module.exports = (play) => {
                 play.to(id).emit('game', {...game, turnColor: game.turnColor})
             }
 
+        })
+        socket.on('connected to spectate game', id => {
+            const game = games.find(game => game.id === id)
+            if (!game) return false
+            socket.emit('game', {...game, turnColor: game.turnColor}, true)
+            socket.join(id)
+        })
+        socket.on('leave room', id => {
+            socket.leave(id)
         })
 
         socket.on('message',(text,name,id) => {

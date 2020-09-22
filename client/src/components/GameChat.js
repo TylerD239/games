@@ -14,18 +14,20 @@ export const GameChat = ({id, size})=> {
     const {name} = useContext(AuthContext)
     const chatContainer = useRef(null)
 
-    const textHandle = (e) => setText(e.target.value)
-    const send = useCallback(evt => {
-
+    const textHandle = evt => setText(evt.target.value)
+    const sendMessage = useCallback(() => {
         if (!text) return false
-        if (!evt.keyCode || evt.keyCode === 13) {
             chessSocket.emit('message', text, name, id)
             setText('')
-        }
+
     },[chessSocket, name, text, id])
 
     useEffect( () => {
-        window.addEventListener('keydown', send)
+
+        const keyPush = evt => {
+            if (evt.keyCode === 13) sendMessage()
+        }
+        window.addEventListener('keydown', keyPush)
         chessSocket.on('new message', message => {
             setMessages(prev => [...prev, message])
             if (message.author !== name) newMessage.play().catch(e => console.info('New Message'))
@@ -33,11 +35,11 @@ export const GameChat = ({id, size})=> {
         chessSocket.on('prev message', messages => setMessages(messages))
 
         return () => {
-            window.removeEventListener('keydown', send)
+            window.removeEventListener('keydown', keyPush)
             chessSocket.removeListener('new message')
             chessSocket.removeListener('prev message')
         }
-    },[chessSocket, send, name])
+    },[chessSocket, sendMessage, name])
 
     useEffect(()=> {
         chessSocket.emit('connected to chat', id)
@@ -64,7 +66,7 @@ export const GameChat = ({id, size})=> {
                 />
                     <div className="input-group-append">
                         <button
-                            onClick={send}
+                            onClick={sendMessage}
                             className="btn btn-outline-secondary"
                             type="button"
                             id="button"
@@ -75,7 +77,7 @@ export const GameChat = ({id, size})=> {
 
 
 
-            <div ref={chatContainer} className="border-top pt-3 border-secondary" id="chatContainer" >
+            <div ref={chatContainer} className="chatContainer border-top pt-3 border-secondary" >
                 {messages.map((message,i) =>
                     (<div className={`card mb-2 w-75 ${message.author === name ? 'border-success ml-auto ' : 'border-info mr-auto '}`} key={i}>
                             <div className="card-body message p-2">

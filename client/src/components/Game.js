@@ -6,23 +6,22 @@ import {IoContext} from "../context/IoContext";
 import white_king from '../pieces/white_king.svg'
 import black_king from '../pieces/black_king.svg'
 
-export const Game = ({game, rating, setCreatedGame}) => {
+export const Game = ({game, rating}) => {
 
     const {name} = useContext(AuthContext)
     const {chessSocket} = useContext(IoContext)
-    const joinGame = () => {
-        chessSocket.emit('join game', game._id, name, rating)
-    }
+    const joinGame = () => chessSocket.emit('join game', game._id, name, rating)
+
 
     const deleteGame = () => {
-        setCreatedGame(false)
+        // setCreatedGame(false)
         chessSocket.emit('delete game', game._id)
     }
 
     return(
         <div className="card text-center mt-3">
             <div className="card-header">
-                <span className="lead">{game.creator} </span><span className="lead">({game[game.creator].rating}) </span>
+                <span className="lead font-weight-bold">{game.creator}</span><span className="lead">({game[game.creator].rating}) </span>
 
             </div>
             <div className="card-body">

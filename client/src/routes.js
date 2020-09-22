@@ -4,20 +4,17 @@ import {InfoPage} from './pages/InfoPage'
 import {PlayPage} from './pages/PlayPage'
 import {AuthPage} from './pages/AuthPage'
 import {ChatPage} from "./pages/ChatPage"
-// import {CrossPage} from "./pages/CrossPage"
 import {ChessPage} from "./pages/ChessPage"
-// import {PlayChess} from "./pages/PlayChess"
+import {SpectatePage} from "./pages/SpectatePage";
 
-export const useRoutes = isAuthenicated => {
 
-    if (isAuthenicated) {
+export const useRoutes = isAuthenticated => {
+
+    if (isAuthenticated) {
         return (
             <Switch>
-                <Route path="/playCross" exact>
-                    <PlayPage type={'cross'}/>
-                </Route>
                 <Route path="/playChess" exact>
-                    <PlayPage type={'chess'}/>
+                    <PlayPage/>
                 </Route>
                 <Route path="/info" exact>
                     <InfoPage />
@@ -25,11 +22,11 @@ export const useRoutes = isAuthenicated => {
                 <Route path="/chat" exact>
                     <ChatPage />
                 </Route>
-                {/*<Route path = "/cross/:id">*/}
-                {/*    <CrossPage />*/}
-                {/*</Route>*/}
                 <Route path = "/chess/:id">
                     <ChessPage />
+                </Route>
+                <Route path = "/spectateChess/:id">
+                    <SpectatePage />
                 </Route>
                 <Redirect to="/playChess" />
             </Switch>

@@ -2,12 +2,10 @@ import React, {useContext, useState} from 'react'
 import {IoContext} from "../context/IoContext";
 import {AuthContext} from "../context/AuthContext";
 
-export const GameSettings = ({setCreatedGame, rating}) => {
+export const GameSettings = ({rating}) => {
     const {chessSocket} = useContext(IoContext)
     const {name} = useContext(AuthContext)
     const createGame = () => {
-
-        setCreatedGame(true)
         chessSocket.emit('send game', name, rating, {color,min,sec})
     }
     const [color, setColor] = useState('random')
