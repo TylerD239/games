@@ -134,12 +134,12 @@ export const ChessPage = () => {
             if (!game) history.push('/playChess')
             if (game._id !== id) return false
 
-            if (!connect) {
-                    const lastMove = game.moves[game.moves.length - 1]
-                    if (lastMove.to.ate) eatSound.play().catch(e => console.info('Sorry for the quiet move'))
-                    else if (game[name].color === lastMove.piece.color) myMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
-                    else enemyMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
-            }
+            // if (!connect) {
+            //         const lastMove = game.moves[game.moves.length - 1]
+            //         if (lastMove.to.ate) eatSound.play().catch(e => console.info('Sorry for the quiet move'))
+            //         else if (game[name].color === lastMove.piece.color) myMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
+            //         else enemyMoveSound.play().catch(e => console.info('Sorry for the quiet move'))
+            // }
 
 
             ref.current.moved = false

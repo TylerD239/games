@@ -30,7 +30,7 @@ export const GameChat = ({id, size})=> {
         window.addEventListener('keydown', keyPush)
         chessSocket.on('new message', message => {
             setMessages(prev => [...prev, message])
-            if (message.author !== name) newMessage.play().catch(e => console.info('New Message'))
+            // if (message.author !== name) newMessage.play().catch(e => console.info('New Message'))
         })
         chessSocket.on('prev message', messages => setMessages(messages))
 
