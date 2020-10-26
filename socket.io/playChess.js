@@ -1,9 +1,8 @@
-const Game = require('../game')
+const Game = require('../chess/game')
 const Game_db = require('../models/Game')
 const User = require('../models/User')
 const {saveGame} = require("../models/mongoFunctions");
 
-// const availableMoves = require('../moves')
 const games = []
 const loseTimers = {}
 const playersInLobby = {}
@@ -58,8 +57,6 @@ module.exports = (play) => {
         socket.on('join game', (id, name, rating) => {
             const game = games.find(game => game.id === id)
             if (!game || game.full) return false
-            // const selfGame = games.find(game => game.creator === name)
-            // if (selfGame) games.splice(games.indexOf(selfGame), 1)
             game.connect(name, rating)
             socket.emit('game connect', id)
             play.to(game.creatorSocketId).emit('game connect', id)

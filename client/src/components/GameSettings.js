@@ -44,7 +44,14 @@ export const GameSettings = ({rating}) => {
                     max="30"
                     id="customRange2"
                 />
-            {rating && (min !== 0 || sec !== 0) && <button type="button" onClick={createGame} className="btn btn-outline-success mt-3 btn-lg" >Создать</button>}
+            {rating && (min !== 0 || sec !== 0) &&
+            <button
+                type="button"
+                onClick={createGame}
+                className="btn btn-outline-success mt-3 btn-lg"
+            >
+                Создать
+            </button>}
         </div>
 
     )

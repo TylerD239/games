@@ -51,7 +51,6 @@ const availableMoves = (color, game) => {
                 field1[move.y][move.x] = field1[el.position.y][el.position.x]
                 field1[move.y][move.x].position = {x: move.x, y: move.y}
                 field1[el.position.y][el.position.x] = 0
-                // if (move.enPassant) field1[move.ate.position.y][move.ate.position.x] = 0
                 return !game[color2].pieces
                     .filter(piece => piece !== move.ate)
                     .some(el => pieceMoves({x: el.position.x, y: el.position.y}, field1, color2)

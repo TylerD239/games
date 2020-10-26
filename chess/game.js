@@ -139,7 +139,6 @@ class Game {
             this[this.colorFormat].name = this.creator
             this[this.getOpponent(this.colorFormat)].name = this.player
         }
-        // this.lastTime = Date.now()
         this.full = true
 
         this.turn = 1

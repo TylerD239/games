@@ -33,23 +33,15 @@ const pieces = {
     white_rook: new PieceImage(white_rook),
 }
 
-// console.log(black_king)
 
 const drawBoard = (field, color, canvas, size, lastMove, check) => {
     const ctx = canvas.getContext('2d')
 
 
-    // ctx.fillStyle = 'rgb(130,130,130)'
-
     ctx.fillStyle = '#C6D5E6'
     ctx.fillRect(0, 0, 8 * size, 8 * size)
     ctx.fillStyle = '#7784A1'
 
-    // ctx.fillStyle = 'rgb(240,240,240)'
-    //
-    // ctx.fillStyle = '#D7A887'
-    // ctx.fillRect(0, 0, 800, 800)
-    // ctx.fillStyle = '#F4E7DE'
 
     for (let i = 0; i < 8; i++) {
         for (let k = i % 2; k < 8; k += 2) {
@@ -74,7 +66,6 @@ const drawBoard = (field, color, canvas, size, lastMove, check) => {
         ctx.fillStyle = 'rgba(130,256,130,0.3)'
         ctx.fillRect(toX * size, toY * size, size, size)
     }
-    // if ()
 
     for (let y = 0; y < 8; y++){
         for (let x = 0; x < 8; x++){
@@ -102,25 +93,19 @@ const drawMoves = (field, color, cell, moves, canvas, size, pre) => {
     ctx.strokeRect(cell.x * size + 2, cell.y * size + 2,size - 4,size - 4)
 
     moves.forEach(move => {
-        // ctx.strokeStyle = move.ate ? 'rgba(250,95,72,0.8)' : 'rgba(250,199,80,0.8)'
 
         ctx.fillStyle = pre ? 'rgba(200,200,200,0.7)': move.ate ? 'rgba(250,95,72,0.9)' : 'rgba(250,199,80,0.9)'
 
-        // const X = color === 'white' ? move.x * size : (7 - move.x) * size
-        // const Y = color === 'white' ? move.y * size : (7 - move.y) * size
         const X = color === 'white' ? move.x : (7 - move.x)
         const Y = color === 'white' ? move.y : (7 - move.y)
         ctx.beginPath()
         ctx.arc(X * size + size / 2 , Y * size + size / 2,size / 8,0, Math.PI * 2)
         ctx.fill()
-        // ctx.strokeRect(X + 2, Y + 2,size - 4,size - 4)
+
     })
 }
 const drawPreMove = (piece, move, field, canvas, size) => {
     const ctx = canvas.getContext('2d')
-    // ctx.lineWidth = 6
-    // ctx.strokeStyle = 'rgba(200,200,80,0.5)'
-
 
 
     const fromX = piece.color === 'black' ? 7 - piece.position.x : piece.position.x

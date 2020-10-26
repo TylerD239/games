@@ -1,7 +1,7 @@
 import React from 'react'
 import {Switch, Route, Redirect} from 'react-router-dom'
 import {InfoPage} from './pages/InfoPage'
-import {PlayPage} from './pages/PlayPage'
+import {LobbyPage} from './pages/lobbyPage'
 import {AuthPage} from './pages/AuthPage'
 import {ChatPage} from "./pages/ChatPage"
 import {ChessPage} from "./pages/ChessPage"
@@ -14,7 +14,7 @@ export const useRoutes = isAuthenticated => {
         return (
             <Switch>
                 <Route path="/playChess" exact>
-                    <PlayPage/>
+                    <LobbyPage/>
                 </Route>
                 <Route path="/info" exact>
                     <InfoPage />

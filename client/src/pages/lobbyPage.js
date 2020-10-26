@@ -8,7 +8,7 @@ import {Loader} from "../components/Loader";
 // import {PlayersInLobby} from "../components/PlayersInLobby";
 
 
-export const PlayPage = () => {
+export const LobbyPage = () => {
 
 
     const {chessSocket} = useContext(IoContext)
@@ -68,12 +68,12 @@ export const PlayPage = () => {
                             <button
                             className="btn btn-outline-success bg-dark btn-block btn-lg mt-3"
                             type="button" data-toggle="collapse"
-                            data-target="#collapseExample"
+                            data-target="#collapse"
                             aria-expanded="false"
-                            aria-controls="collapseExample">
+                            aria-controls="collapse">
                             Новая игра
                         </button>
-                            <div className="collapse mt-3" id="collapseExample">
+                            <div className="collapse mt-3" id="collapse">
                                 <GameSettings  rating = {rating}/>
                             </div>
 
