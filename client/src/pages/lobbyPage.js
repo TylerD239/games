@@ -65,17 +65,18 @@ export const LobbyPage = () => {
                 </div>
 
                 <div className="col-lg-6 order-first order-lg-0">
-                            <button
-                            className="btn btn-outline-success bg-dark btn-block btn-lg mt-3"
-                            type="button" data-toggle="collapse"
-                            data-target="#collapse"
-                            aria-expanded="false"
-                            aria-controls="collapse">
-                            Новая игра
-                        </button>
-                            <div className="collapse mt-3" id="collapse">
-                                <GameSettings  rating = {rating}/>
-                            </div>
+                    <button
+                        className="btn btn-outline-success bg-dark btn-block btn-lg mt-3"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#collapse"
+                        aria-expanded="false"
+                        aria-controls="collapse">
+                        Новая игра
+                    </button>
+                    <div className="collapse mt-3" id="collapse">
+                        <GameSettings  rating = {rating}/>
+                    </div>
 
                     <div>
                         {games.map(game => {

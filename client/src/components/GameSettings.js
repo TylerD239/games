@@ -49,6 +49,10 @@ export const GameSettings = ({rating}) => {
                 type="button"
                 onClick={createGame}
                 className="btn btn-outline-success mt-3 btn-lg"
+                data-toggle="collapse"
+                data-target="#collapse"
+                aria-expanded="false"
+                aria-controls="collapse"
             >
                 Создать
             </button>}
